@@ -19,7 +19,7 @@ import { Users } from './collections/Users'
 import { HomePage } from './globals/HomePage'
 import { MassSchedule } from './globals/MassSchedule'
 import { SiteSettings } from './globals/SiteSettings'
-import { getServerSideURL } from './lib/url'
+import { getServerSideURL, getTrustedOrigins } from './lib/url'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -28,6 +28,8 @@ const serverURL = getServerSideURL()
 
 export default buildConfig({
   serverURL,
+  // Sign-in cookies are only accepted from these addresses (fsspx.co.za and www).
+  csrf: getTrustedOrigins(),
   admin: {
     user: Users.slug,
     importMap: { baseDir: path.resolve(dirname) },
