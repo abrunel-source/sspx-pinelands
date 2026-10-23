@@ -1,0 +1,72 @@
+// SSPX branding for the admin panel.
+
+:root {
+  --sspx-wine: #7a1f2b;
+  --sspx-wine-dark: #5a1520;
+}
+
+.sspx-admin-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  text-align: center;
+
+  &__wordmark {
+    width: 300px;
+    max-width: 100%;
+    height: auto;
+  }
+
+  &__sub {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--theme-elevation-600);
+  }
+}
+
+.sspx-admin-icon {
+  width: 20px;
+  height: auto;
+}
+
+html[data-theme='dark'] .sspx-admin-logo__wordmark {
+  filter: invert(1);
+}
+
+// Primary buttons in chapel wine instead of the default black.
+.btn--style-primary {
+  --bg-color: var(--sspx-wine);
+  --hover-bg: var(--sspx-wine-dark);
+  --color: #fff;
+  --hover-color: #fff;
+  background-color: var(--sspx-wine);
+  color: #fff;
+
+  &:hover:not(:disabled) {
+    background-color: var(--sspx-wine-dark);
+    color: #fff;
+  }
+}
+
+.sspx-dashboard-note {
+  margin-bottom: calc(var(--base) * 2);
+  padding: calc(var(--base) * 1.25) calc(var(--base) * 1.5);
+  border: 1px solid var(--theme-elevation-150);
+  border-radius: var(--style-radius-m);
+  background: var(--theme-elevation-50);
+
+  h2 {
+    margin: 0 0 8px;
+  }
+
+  p {
+    margin: 0 0 8px;
+    max-width: 70ch;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

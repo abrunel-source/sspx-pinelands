@@ -1,0 +1,52 @@
+{
+  "name": "sspx-pinelands",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Website and CMS for the Chapel of Our Lady of the Blessed Sacrament, SSPX Cape Town (Pinelands).",
+  "type": "module",
+  "scripts": {
+    "dev": "cross-env NODE_OPTIONS=--no-deprecation next dev",
+    "build": "cross-env NODE_OPTIONS=--no-deprecation next build",
+    "start": "cross-env NODE_OPTIONS=--no-deprecation next start",
+    "ci": "cross-env NODE_OPTIONS=--no-deprecation payload migrate && npm run build",
+    "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
+    "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
+    "migrate": "cross-env NODE_OPTIONS=--no-deprecation payload migrate",
+    "migrate:create": "cross-env NODE_OPTIONS=--no-deprecation payload migrate:create",
+    "seed": "cross-env NODE_OPTIONS=--no-deprecation payload run src/seed/index.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "dependencies": {
+    "@payloadcms/db-postgres": "3.90.2",
+    "@payloadcms/email-resend": "3.90.2",
+    "@payloadcms/live-preview-react": "3.90.2",
+    "@payloadcms/next": "3.90.2",
+    "@payloadcms/plugin-seo": "3.90.2",
+    "@payloadcms/richtext-lexical": "3.90.2",
+    "@payloadcms/storage-vercel-blob": "3.90.2",
+    "@payloadcms/ui": "3.90.2",
+    "cross-env": "7.0.3",
+    "graphql": "16.11.0",
+    "next": "16.4.2",
+    "payload": "3.90.2",
+    "react": "19.2.6",
+    "react-dom": "19.2.6",
+    "sharp": "0.35.5"
+  },
+  "devDependencies": {
+    "@types/jsdom": "30.0.0",
+    "@types/node": "22.19.9",
+    "@types/react": "19.2.14",
+    "@types/react-dom": "19.2.3",
+    "jsdom": "28.0.0",
+    "typescript": "5.7.3"
+  },
+  "overrides": {
+    "undici@^7": "^7.29.1",
+    "dompurify": "^3.4.17"
+  }
+}
