@@ -114,18 +114,18 @@ export const HomePage: GlobalConfig = {
           label: 'Sermons',
           fields: [
             eyebrow('Listen & Watch'),
-            heading('Sermons, Masses and the SSPX Podcast'),
+            heading('Homilies and the SSPX Podcast'),
             {
               name: 'intro',
               type: 'textarea',
               defaultValue:
-                "Missed Sunday, or want to hear a sermon again? Recorded Masses from our chapel and the Society's official podcast are always available.",
+                "Missed Sunday, or want to hear a sermon again? Homilies from our chapel and the Society's official podcast are always available.",
             },
-            { name: 'youtubeTitle', type: 'text', defaultValue: 'Recorded Masses from our chapel' },
+            { name: 'youtubeTitle', type: 'text', defaultValue: 'Sunday homilies from our chapel' },
             {
               name: 'youtubeText',
               type: 'textarea',
-              defaultValue: 'The newest recording plays first. Open the playlist to browse earlier Masses and sermons.',
+              defaultValue: 'The latest homily appears here automatically each week. Open the channel to hear earlier homilies.',
             },
             { name: 'podcastTitle', type: 'text', defaultValue: 'Interviews, sermons and Q&A with SSPX priests' },
             {

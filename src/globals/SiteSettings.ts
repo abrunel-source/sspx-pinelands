@@ -80,16 +80,49 @@ export const SiteSettings: GlobalConfig = {
         {
           label: 'Sermons & media',
           fields: [
-            { name: 'youtubeUrl', label: 'YouTube channel', type: 'text', defaultValue: 'https://www.youtube.com/@mgpwild' },
+            { name: 'youtubeUrl', label: 'YouTube channel (homilies)', type: 'text', defaultValue: 'https://www.youtube.com/@mgpwild' },
+            {
+              name: 'youtubeChannelId',
+              label: 'YouTube channel ID',
+              type: 'text',
+              defaultValue: 'UCALIHWtnVE-4Tqe-mW8Xuyw',
+              admin: {
+                description:
+                  'Starts with UC. Every morning at 07:00 the website checks this channel and shows its newest homily.',
+              },
+            },
             {
               name: 'youtubePlaylistId',
-              label: 'YouTube playlist to embed',
+              label: 'Fallback playlist',
               type: 'text',
               defaultValue: 'UUALIHWtnVE-4Tqe-mW8Xuyw',
               admin: {
-                description:
-                  'The default is the channel’s uploads, so the newest recorded Mass always shows first. To show a specific playlist instead, paste its ID (the part after list= in the playlist link).',
+                description: 'Shown only if the newest homily cannot be found. The default is the channel’s uploads.',
               },
+            },
+            {
+              name: 'latestHomily',
+              label: 'Latest homily (updated automatically)',
+              type: 'group',
+              admin: {
+                description: 'Filled in every morning at 07:00 from the YouTube channel. No need to edit.',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'videoId', type: 'text', admin: { readOnly: true, width: '30%' } },
+                    { name: 'title', type: 'text', admin: { readOnly: true, width: '70%' } },
+                  ],
+                },
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'publishedAt', label: 'Published', type: 'date', admin: { readOnly: true, width: '50%', date: { pickerAppearance: 'dayAndTime' } } },
+                    { name: 'checkedAt', label: 'Last checked', type: 'date', admin: { readOnly: true, width: '50%', date: { pickerAppearance: 'dayAndTime' } } },
+                  ],
+                },
+              ],
             },
             {
               name: 'podcastUrl',

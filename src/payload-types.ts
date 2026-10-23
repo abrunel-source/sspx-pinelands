@@ -446,7 +446,7 @@ export interface Event {
   _status?: ('draft' | 'published') | null;
 }
 /**
- * Feasts shown in “Feasts in the coming days” on the home page. The next four from today appear automatically.
+ * Feasts shown in “Feasts in the coming days” on the home page; the next four from today appear. Every Friday at 18:00 the calendar is topped up automatically from the 1962 Roman calendar (Missale Meum). Feasts you add yourself are never changed, and replace the automatic entry for that day.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "feasts".
@@ -456,6 +456,10 @@ export interface Feast {
   title: string;
   date: string;
   colour: 'white' | 'red' | 'green' | 'violet' | 'rose' | 'black';
+  /**
+   * Automatic entries are refreshed every Friday. Edit one and it becomes yours.
+   */
+  source?: ('manual' | 'auto') | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -719,6 +723,7 @@ export interface FeastsSelect<T extends boolean = true> {
   title?: T;
   date?: T;
   colour?: T;
+  source?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1169,9 +1174,22 @@ export interface SiteSetting {
   mapEmbedUrl?: string | null;
   youtubeUrl?: string | null;
   /**
-   * The default is the channel’s uploads, so the newest recorded Mass always shows first. To show a specific playlist instead, paste its ID (the part after list= in the playlist link).
+   * Starts with UC. Every morning at 07:00 the website checks this channel and shows its newest homily.
+   */
+  youtubeChannelId?: string | null;
+  /**
+   * Shown only if the newest homily cannot be found. The default is the channel’s uploads.
    */
   youtubePlaylistId?: string | null;
+  /**
+   * Filled in every morning at 07:00 from the YouTube channel. No need to edit.
+   */
+  latestHomily?: {
+    videoId?: string | null;
+    title?: string | null;
+    publishedAt?: string | null;
+    checkedAt?: string | null;
+  };
   podcastUrl?: string | null;
   podcastEmbedUrl?: string | null;
   updatedAt?: string | null;
@@ -1337,7 +1355,16 @@ export interface SiteSettingsSelect<T extends boolean = true> {
   directionsUrl?: T;
   mapEmbedUrl?: T;
   youtubeUrl?: T;
+  youtubeChannelId?: T;
   youtubePlaylistId?: T;
+  latestHomily?:
+    | T
+    | {
+        videoId?: T;
+        title?: T;
+        publishedAt?: T;
+        checkedAt?: T;
+      };
   podcastUrl?: T;
   podcastEmbedUrl?: T;
   updatedAt?: T;

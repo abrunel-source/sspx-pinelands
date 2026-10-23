@@ -21,7 +21,7 @@ export const Feasts: CollectionConfig = {
     useAsTitle: 'title',
     defaultColumns: ['title', 'date', 'colour'],
     description:
-      'Feasts shown in “Feasts in the coming days” on the home page. The next four from today appear automatically.',
+      'Feasts shown in “Feasts in the coming days” on the home page; the next four from today appear. Every Friday at 18:00 the calendar is topped up automatically from the 1962 Roman calendar (Missale Meum). Feasts you add yourself are never changed, and replace the automatic entry for that day.',
     livePreview: { url: () => previewPath('/#calendar') },
   },
   access: collectionAccess('feasts', 'all'),
@@ -53,6 +53,24 @@ export const Feasts: CollectionConfig = {
           admin: { width: '50%' },
         },
       ],
+    },
+    {
+      name: 'source',
+      type: 'select',
+      defaultValue: 'manual',
+      options: [
+        { label: 'Added by hand', value: 'manual' },
+        { label: 'Automatic (1962 calendar)', value: 'auto' },
+      ],
+      admin: {
+        position: 'sidebar',
+        readOnly: true,
+        description: 'Automatic entries are refreshed every Friday. Edit one and it becomes yours.',
+      },
+      hooks: {
+        // Any edit made in the admin turns an automatic entry into a manual one.
+        beforeChange: [({ req, value, operation }) => (req.user && operation === 'update' ? 'manual' : value)],
+      },
     },
   ],
   hooks: {

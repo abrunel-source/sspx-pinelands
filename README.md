@@ -54,6 +54,17 @@ Anyone with "Edit users" can still give *other* accounts any role, so give that 
 
 **Adding someone:** Admin › Users › Create new. Enter their name and email, choose their roles and set a temporary password. Then ask them to use **Forgot password?** on the login screen to choose their own.
 
+## Automatic updates
+
+Two scheduled tasks keep the home page current without anyone editing it (schedules in `vercel.json`, in UTC):
+
+| When (Cape Town) | What |
+| --- | --- |
+| Every day, 07:00 | Fetches the newest video from the chapel's YouTube channel (the Sunday homily) and shows it in the Homilies section. |
+| Fridays, 18:00 | Tops up **Feasts & calendar** for the next ten weeks from the 1962 Roman calendar ([Missale Meum](https://www.missalemeum.com)): Sundays and feasts of the first and second class, with their liturgical colours. Feasts added by hand are never changed and replace the automatic entry for that day. |
+
+Both also run on every deploy, and can be run by hand with `npm run sync`. Set `CRON_SECRET` in Vercel so only Vercel's scheduler can trigger them.
+
 ## Local development
 
 Requirements: Node 20.9+ and a Postgres database.

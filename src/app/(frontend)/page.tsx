@@ -51,6 +51,7 @@ export default async function HomePage() {
 
   const { hero, visit, listen, community, school, news, give, contact } = home
   const quote = home.quote ?? {}
+  const homily = settings.latestHomily
   const masses = schedule.masses ?? []
   const [featuredPost, secondPost] = posts.docs
   const topics = contact.topics?.length ? contact.topics.map((t) => t.label) : DEFAULT_TOPICS
@@ -180,7 +181,7 @@ export default async function HomePage() {
             {settings.youtubeUrl && (
               <a href={settings.youtubeUrl} className="icon-link">
                 <YouTubeIcon />
-                Watch recorded Masses on YouTube
+                Listen to Sunday homilies on YouTube
               </a>
             )}
           </div>
@@ -280,12 +281,16 @@ export default async function HomePage() {
             {listen.intro && <p className="lede">{listen.intro}</p>}
           </div>
           <div className="media-grid">
-            {settings.youtubePlaylistId && (
+            {(homily?.videoId || settings.youtubePlaylistId) && (
               <article className="media-card">
                 <div className="media-embed">
                   <iframe
-                    src={`https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(settings.youtubePlaylistId)}`}
-                    title="Recorded Masses from the chapel on YouTube"
+                    src={
+                      homily?.videoId
+                        ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(homily.videoId)}?rel=0`
+                        : `https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(settings.youtubePlaylistId ?? '')}`
+                    }
+                    title={homily?.publishedAt ? `Homily of ${formatDate(homily.publishedAt)}` : 'Latest homily from the chapel on YouTube'}
                     loading="lazy"
                     allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     referrerPolicy="strict-origin-when-cross-origin"
@@ -293,10 +298,12 @@ export default async function HomePage() {
                   />
                 </div>
                 <div className="media-body">
-                  <span className="caps-label">YouTube</span>
+                  <span className="caps-label">
+                    {homily?.publishedAt ? `Latest homily · ${formatDate(homily.publishedAt)}` : 'YouTube'}
+                  </span>
                   <h3>{listen.youtubeTitle}</h3>
                   {listen.youtubeText && <p>{listen.youtubeText}</p>}
-                  {settings.youtubeUrl && <a href={settings.youtubeUrl}>Open the full archive</a>}
+                  {settings.youtubeUrl && <a href={settings.youtubeUrl}>Hear earlier homilies</a>}
                 </div>
               </article>
             )}

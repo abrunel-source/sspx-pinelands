@@ -22,7 +22,7 @@ import { convertHTMLToLexical, editorConfigFactory } from '@payloadcms/richtext-
 import { JSDOM } from 'jsdom'
 import { getPayload } from 'payload'
 
-import { home, massSchedule, posts, roles } from './data'
+import { SCHOOL_PHOTO_ALT, home, massSchedule, posts, roles } from './data'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 // A fresh context for every call: Payload's storage plugin keeps a "skip
@@ -41,6 +41,7 @@ const MEDIA: { file: string; alt: string; caption?: string }[] = [
   { file: 'community-cook-off.jpg', alt: 'Parishioners cooking together in the hall under flags of many nations' },
   { file: 'community-advent.jpg', alt: 'Decorating the Christmas tree in the hall' },
   { file: 'school.jpg', alt: 'Pupils in red blazers with their priest and teachers on the chapel steps' },
+  { file: 'school-distinctions.jpg', alt: SCHOOL_PHOTO_ALT },
   { file: 'open-letter-cover.jpg', alt: 'Cover of Open Letter to Confused Catholics by Archbishop Marcel Lefebvre' },
 ]
 

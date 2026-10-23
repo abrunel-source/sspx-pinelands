@@ -1,5 +1,15 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "buildCommand": "npm run ci"
+  "buildCommand": "npm run ci",
+  "crons": [
+    {
+      "path": "/cron/youtube",
+      "schedule": "0 5 * * *"
+    },
+    {
+      "path": "/cron/feasts",
+      "schedule": "0 16 * * 5"
+    }
+  ]
 }

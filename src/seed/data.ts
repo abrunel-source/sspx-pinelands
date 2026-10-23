@@ -2,6 +2,9 @@ import type { HomePage, MassSchedule, Role } from '@/payload-types'
 
 type Perms = NonNullable<Role['permissions']>
 
+export const SCHOOL_PHOTO_ALT =
+  'Homeschool pupils in red blazers with their priest, holding their 2024 virtue distinction certificates'
+
 // --- Starter roles ---------------------------------------------------------
 // Examples to adapt or delete. Super admins always have full access.
 
@@ -117,11 +120,11 @@ export const home = (media: Record<string, number>): Partial<HomePage> => ({
   },
   listen: {
     eyebrow: 'Listen & Watch',
-    heading: 'Sermons, Masses and the SSPX Podcast',
+    heading: 'Homilies and the SSPX Podcast',
     intro:
-      "Missed Sunday, or want to hear a sermon again? Recorded Masses from our chapel and the Society's official podcast are always available.",
-    youtubeTitle: 'Recorded Masses from our chapel',
-    youtubeText: 'The newest recording plays first. Open the playlist to browse earlier Masses and sermons.',
+      "Missed Sunday, or want to hear a sermon again? Homilies from our chapel and the Society's official podcast are always available.",
+    youtubeTitle: 'Sunday homilies from our chapel',
+    youtubeText: 'The latest homily appears here automatically each week. Open the channel to hear earlier homilies.',
     podcastTitle: 'Interviews, sermons and Q&A with SSPX priests',
     podcastText: 'The official English-language podcast of the Society, updated weekly.',
   },
@@ -143,7 +146,7 @@ export const home = (media: Record<string, number>): Partial<HomePage> => ({
     heading: 'Homeschooling with faith at the heart of every subject',
     body: 'Our Catholic homeschooling curriculum weaves the faith into every subject. Small class sizes give each child individual attention, and a close-knit community binds students, teachers and families together.',
     emphasis: 'Registrations for the new year open soon.',
-    image: media['school.jpg'],
+    image: media['school-distinctions.jpg'],
     showForm: true,
   },
   news: { eyebrow: 'News & Reading', heading: 'From the chapel' },
