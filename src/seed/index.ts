@@ -30,29 +30,6 @@ const context = { disableRevalidate: true }
 const payload = await getPayload({ config })
 const log = (msg: string) => payload.logger.info(`[seed] ${msg}`)
 
-if (process.env.SEED_IF_EMPTY) {
-  // An empty media library means the photos were never loaded (a new
-  // database, or one set up before Blob storage was connected).
-  const media = await payload.count({ collection: 'media' })
-  if (media.totalDocs > 0) {
-    log('media library already has photos, skipping')
-    process.exit(0)
-  }
-  log('no photos yet, loading the starting content')
-}
-
-// On Vercel the file system is temporary, so uploads only survive in Blob storage.
-const canUpload = !process.env.VERCEL || Boolean(process.env.BLOB_READ_WRITE_TOKEN)
-if (!canUpload) {
-  payload.logger.warn(
-    '[seed] BLOB_READ_WRITE_TOKEN is not set: skipping photos. Connect a Blob store to the project and redeploy.',
-  )
-}
-
-// --- Media -----------------------------------------------------------------
-
-const mediaIds: Record<string, number> = {}
-
 const MEDIA: { file: string; alt: string; caption?: string }[] = [
   { file: 'hero-altar.jpg', alt: 'The high altar of the chapel of Our Lady of the Blessed Sacrament' },
   { file: 'park-morning.jpg', alt: 'Morning light through the trees in the park across from the chapel' },
@@ -64,25 +41,94 @@ const MEDIA: { file: string; alt: string; caption?: string }[] = [
   { file: 'open-letter-cover.jpg', alt: 'Cover of Open Letter to Confused Catholics by Archbishop Marcel Lefebvre' },
 ]
 
+// --- Where photos are stored ----------------------------------------------
+// On Vercel the file system is temporary, so uploads only survive in Blob storage.
+
+const onVercel =
+  Boolean(process.env.VERCEL || process.env.VERCEL_ENV || process.env.VERCEL_URL) ||
+  process.cwd().startsWith('/vercel/')
+const blobToken = process.env.BLOB_READ_WRITE_TOKEN || ''
+const blobStoreId = blobToken.match(/^vercel_blob_rw_([a-z\d]+)_[a-z\d]+$/i)?.[1]?.toLowerCase()
+const blobBase = blobStoreId
+  ? process.env.STORAGE_VERCEL_BLOB_BASE_URL || `https://${blobStoreId}.public.blob.vercel-storage.com`
+  : null
+const canUpload = !onVercel || Boolean(blobBase)
+
+if (blobBase) log(`photos are stored in Vercel Blob (store ${blobStoreId})`)
+else if (onVercel) {
+  payload.logger.warn(
+    `[seed] BLOB_READ_WRITE_TOKEN is not available to this ${process.env.VERCEL_ENV || ''} build: skipping photos. ` +
+      'In Vercel, connect the Blob store to this environment (Storage tab), then redeploy.',
+  )
+} else log('photos are stored on the local disk (./media)')
+
+/** True if a media record's file is actually present in Blob storage. */
+const inBlob = async (doc: { filename?: string | null; prefix?: string | null }) => {
+  if (!blobBase || !doc.filename) return true
+  const key = [doc.prefix, doc.filename].filter(Boolean).join('/')
+  try {
+    const res = await fetch(`${blobBase}/${encodeURIComponent(key).replace(/%2F/g, '/')}`, { method: 'HEAD' })
+    return res.ok
+  } catch {
+    return false
+  }
+}
+
+const findSeedPhoto = async (file: string) =>
+  (await payload.find({ collection: 'media', where: { filename: { equals: file } }, limit: 1, depth: 0 })).docs[0]
+
+if (process.env.SEED_IF_EMPTY) {
+  // Run when the photos were never loaded (a new database, or one set up
+  // before Blob storage was connected), or when Blob storage is missing files.
+  const media = await payload.count({ collection: 'media' })
+  let missing = 0
+  if (media.totalDocs > 0 && blobBase) {
+    for (const item of MEDIA) {
+      const doc = await findSeedPhoto(item.file)
+      if (doc && !(await inBlob(doc))) missing++
+    }
+  }
+  if (media.totalDocs > 0 && missing === 0) {
+    log('media library already has photos, skipping')
+    process.exit(0)
+  }
+  log(missing ? `${missing} photo(s) missing from storage, repairing` : 'no photos yet, loading the starting content')
+}
+
+// --- Media -----------------------------------------------------------------
+
+const mediaIds: Record<string, number> = {}
+
 for (const item of canUpload ? MEDIA : []) {
-  const existing = await payload.find({
-    collection: 'media',
-    where: { filename: { equals: item.file } },
-    limit: 1,
-    depth: 0,
-  })
-  if (existing.docs[0]) {
-    mediaIds[item.file] = existing.docs[0].id
+  const filePath = path.resolve(dirname, 'media', item.file)
+  const existing = await findSeedPhoto(item.file)
+  if (existing) {
+    mediaIds[item.file] = existing.id
+    // The record exists but its file never reached storage: upload it again,
+    // keeping the same record so pages that use the photo stay linked.
+    if (!(await inBlob(existing))) {
+      try {
+        await payload.update({ collection: 'media', id: existing.id, data: {}, filePath, overwriteExistingFiles: true, context })
+        log(`re-uploaded ${item.file}`)
+      } catch (err) {
+        payload.logger.warn({ err }, `[seed] could not re-upload ${item.file}`)
+      }
+    }
     continue
   }
-  const doc = await payload.create({
-    collection: 'media',
-    data: { alt: item.alt, caption: item.caption },
-    filePath: path.resolve(dirname, 'media', item.file),
-    context,
-  })
-  mediaIds[item.file] = doc.id
-  log(`uploaded ${item.file}`)
+  // A failed upload is reported but does not stop the deploy.
+  try {
+    const doc = await payload.create({
+      collection: 'media',
+      data: { alt: item.alt, caption: item.caption },
+      filePath,
+      context,
+    })
+    mediaIds[item.file] = doc.id
+    log(`uploaded ${item.file}`)
+  } catch (err) {
+    payload.logger.warn({ err }, `[seed] could not upload ${item.file}`)
+  }
 }
 
 // --- Roles -----------------------------------------------------------------
