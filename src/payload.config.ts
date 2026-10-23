@@ -80,8 +80,11 @@ export default buildConfig({
         collectionSlug === 'posts' && doc?.slug ? `${serverURL}/news/${doc.slug}` : serverURL,
     }),
     // Uploads go to Vercel Blob in production. Locally they are kept in ./media.
+    // alwaysInsertFields keeps the database schema identical with and without a
+    // token, so migrations generated locally match production.
     vercelBlobStorage({
       enabled: Boolean(process.env.BLOB_READ_WRITE_TOKEN),
+      alwaysInsertFields: true,
       collections: { media: true },
       token: process.env.BLOB_READ_WRITE_TOKEN || '',
       clientUploads: true,
