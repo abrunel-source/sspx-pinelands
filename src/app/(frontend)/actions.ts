@@ -4,6 +4,7 @@ import { headers } from 'next/headers'
 
 import { brandedEmail, escapeHTML } from '@/lib/email'
 import { getPayloadClient } from '@/lib/payload'
+import { getServerSideURL } from '@/lib/url'
 
 export type FormState = {
   status: 'idle' | 'success' | 'error'
@@ -98,7 +99,7 @@ ${message ? `<p style="margin:16px 0 0;white-space:pre-wrap;">${escapeHTML(messa
 <p style="margin:20px 0 0;font-size:13px;color:#5B5E66;">Reply to this email to answer ${escapeHTML(name || email)} directly.</p>`,
         button: {
           label: 'Open in the admin panel',
-          url: `${process.env.NEXT_PUBLIC_SERVER_URL || ''}/admin/collections/form-submissions/${submission.id}`,
+          url: `${getServerSideURL()}/admin/collections/form-submissions/${submission.id}`,
         },
       }),
     })

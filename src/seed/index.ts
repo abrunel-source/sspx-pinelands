@@ -25,7 +25,10 @@ import { getPayload } from 'payload'
 import { home, massSchedule, posts, roles } from './data'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
-const context = { disableRevalidate: true }
+// A fresh context for every call: Payload's storage plugin keeps a "skip
+// upload" flag on the request context, and a shared object would leak it
+// from one upload into the next, silently skipping every photo after the first.
+const context = () => ({ disableRevalidate: true })
 
 const payload = await getPayload({ config })
 const log = (msg: string) => payload.logger.info(`[seed] ${msg}`)
@@ -108,7 +111,7 @@ for (const item of canUpload ? MEDIA : []) {
     // keeping the same record so pages that use the photo stay linked.
     if (!(await inBlob(existing))) {
       try {
-        await payload.update({ collection: 'media', id: existing.id, data: {}, filePath, overwriteExistingFiles: true, context })
+        await payload.update({ collection: 'media', id: existing.id, data: {}, filePath, overwriteExistingFiles: true, context: context() })
         log(`re-uploaded ${item.file}`)
       } catch (err) {
         payload.logger.warn({ err }, `[seed] could not re-upload ${item.file}`)
@@ -122,7 +125,7 @@ for (const item of canUpload ? MEDIA : []) {
       collection: 'media',
       data: { alt: item.alt, caption: item.caption },
       filePath,
-      context,
+      context: context(),
     })
     mediaIds[item.file] = doc.id
     log(`uploaded ${item.file}`)
@@ -136,7 +139,7 @@ for (const item of canUpload ? MEDIA : []) {
 for (const role of roles) {
   const existing = await payload.find({ collection: 'roles', where: { name: { equals: role.name } }, limit: 1 })
   if (existing.docs[0]) continue
-  await payload.create({ collection: 'roles', data: role, context })
+  await payload.create({ collection: 'roles', data: role, context: context() })
   log(`created role "${role.name}"`)
 }
 
@@ -145,19 +148,19 @@ for (const role of roles) {
 // Site settings only need saving once so the defaults are stored.
 const settings = await payload.findGlobal({ slug: 'site-settings', depth: 0 })
 if (!settings.updatedAt) {
-  await payload.updateGlobal({ slug: 'site-settings', data: {}, context })
+  await payload.updateGlobal({ slug: 'site-settings', data: {}, context: context() })
   log('saved site settings')
 }
 
 const schedule = await payload.findGlobal({ slug: 'mass-schedule', depth: 0 })
 if (!schedule.masses?.length) {
-  await payload.updateGlobal({ slug: 'mass-schedule', data: { ...massSchedule, _status: 'published' }, context })
+  await payload.updateGlobal({ slug: 'mass-schedule', data: { ...massSchedule, _status: 'published' }, context: context() })
   log('published Mass schedule')
 }
 
 const homePage = await payload.findGlobal({ slug: 'home-page', depth: 0 })
 if (!homePage.updatedAt) {
-  await payload.updateGlobal({ slug: 'home-page', data: { ...home(mediaIds), _status: 'published' }, context })
+  await payload.updateGlobal({ slug: 'home-page', data: { ...home(mediaIds), _status: 'published' }, context: context() })
   log('published home page')
 } else if (Object.keys(mediaIds).length) {
   // The home page was already saved (e.g. edited before the photos existed):
@@ -180,7 +183,7 @@ if (!homePage.updatedAt) {
     const { id: _id, updatedAt: _u, createdAt: _c, globalType: _g, ...data } = next as typeof next & {
       globalType?: string
     }
-    await payload.updateGlobal({ slug: 'home-page', data: { ...data, _status: 'published' }, context })
+    await payload.updateGlobal({ slug: 'home-page', data: { ...data, _status: 'published' }, context: context() })
     log('added missing photos to the home page')
   }
 }
@@ -201,7 +204,7 @@ for (const post of posts) {
     // Created before the photos existed: add the cover now, keeping any edits.
     const cover = post.coverImage ? mediaIds[post.coverImage] : undefined
     if (cover && !found.coverImage) {
-      await payload.update({ collection: 'posts', id: found.id, data: { coverImage: cover }, context })
+      await payload.update({ collection: 'posts', id: found.id, data: { coverImage: cover }, context: context() })
       log(`added cover photo to "${post.title}"`)
     }
     continue
@@ -225,7 +228,7 @@ for (const post of posts) {
       meta: { title: post.metaTitle, description: post.metaDescription },
       _status: 'published',
     },
-    context,
+    context: context(),
   })
   log(`published post "${post.title}"`)
 }
@@ -239,7 +242,7 @@ if (SEED_ADMIN_EMAIL && SEED_ADMIN_PASSWORD) {
     await payload.create({
       collection: 'users',
       data: { name: 'Administrator', email: SEED_ADMIN_EMAIL, password: SEED_ADMIN_PASSWORD, superAdmin: true },
-      context,
+      context: context(),
     })
     log(`created super admin ${SEED_ADMIN_EMAIL}`)
   }

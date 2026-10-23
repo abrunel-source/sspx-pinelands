@@ -1,13 +1,18 @@
 import Image from 'next/image'
 
 import type { Media } from '@/payload-types'
-import { getServerSideURL } from '@/lib/url'
 
-// Payload prefixes local uploads with the server URL. Make those relative so
-// next/image treats them as local files rather than remote images.
+// Payload prefixes uploads with the site address (https://fsspx.co.za/api/media/…).
+// They are served by this app whatever the domain, so use the path alone:
+// next/image then treats them as local files, also on preview deployments.
 const toSrc = (url: string) => {
-  const origin = getServerSideURL()
-  return url.startsWith(origin) ? url.slice(origin.length) || '/' : url
+  try {
+    const { pathname, search } = new URL(url, 'http://local')
+    if (pathname.startsWith('/api/media/')) return pathname + search
+  } catch {
+    // Not a URL we recognise: use it as given.
+  }
+  return url
 }
 
 type Props = {

@@ -1,8 +1,11 @@
+/** The site's public address, without a trailing slash (tolerates one in the setting). */
 export const getServerSideURL = () =>
-  process.env.NEXT_PUBLIC_SERVER_URL ||
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : 'http://localhost:3000')
+  (
+    process.env.NEXT_PUBLIC_SERVER_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : 'http://localhost:3000')
+  ).replace(/\/+$/, '')
 
 /** Admin "Preview" and live-preview iframe URL for a site path. */
 export const previewPath = (path: string) =>
