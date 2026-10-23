@@ -8,6 +8,10 @@
  *
  * Optionally create the first super admin at the same time:
  *   SEED_ADMIN_EMAIL=you@example.com SEED_ADMIN_PASSWORD='…' npm run seed
+ *
+ * Deployments run it with SEED_IF_EMPTY=1 (see `npm run ci`): it then only
+ * runs on a brand-new database, so content editors later delete is never
+ * brought back by the next deploy.
  */
 import fs from 'fs/promises'
 import path from 'path'
@@ -26,6 +30,25 @@ const context = { disableRevalidate: true }
 const payload = await getPayload({ config })
 const log = (msg: string) => payload.logger.info(`[seed] ${msg}`)
 
+if (process.env.SEED_IF_EMPTY) {
+  // An empty media library means the photos were never loaded (a new
+  // database, or one set up before Blob storage was connected).
+  const media = await payload.count({ collection: 'media' })
+  if (media.totalDocs > 0) {
+    log('media library already has photos, skipping')
+    process.exit(0)
+  }
+  log('no photos yet, loading the starting content')
+}
+
+// On Vercel the file system is temporary, so uploads only survive in Blob storage.
+const canUpload = !process.env.VERCEL || Boolean(process.env.BLOB_READ_WRITE_TOKEN)
+if (!canUpload) {
+  payload.logger.warn(
+    '[seed] BLOB_READ_WRITE_TOKEN is not set: skipping photos. Connect a Blob store to the project and redeploy.',
+  )
+}
+
 // --- Media -----------------------------------------------------------------
 
 const mediaIds: Record<string, number> = {}
@@ -41,7 +64,7 @@ const MEDIA: { file: string; alt: string; caption?: string }[] = [
   { file: 'open-letter-cover.jpg', alt: 'Cover of Open Letter to Confused Catholics by Archbishop Marcel Lefebvre' },
 ]
 
-for (const item of MEDIA) {
+for (const item of canUpload ? MEDIA : []) {
   const existing = await payload.find({
     collection: 'media',
     where: { filename: { equals: item.file } },
@@ -90,6 +113,30 @@ const homePage = await payload.findGlobal({ slug: 'home-page', depth: 0 })
 if (!homePage.updatedAt) {
   await payload.updateGlobal({ slug: 'home-page', data: { ...home(mediaIds), _status: 'published' }, context })
   log('published home page')
+} else if (Object.keys(mediaIds).length) {
+  // The home page was already saved (e.g. edited before the photos existed):
+  // only fill in photos that are still empty, keeping every edit.
+  const seeded = home(mediaIds)
+  const next = structuredClone(homePage)
+  let changed = false
+  for (const section of ['hero', 'visit', 'school'] as const) {
+    const target = next[section] as { image?: unknown } | undefined
+    if (target && !target.image && seeded[section]?.image) {
+      target.image = seeded[section]!.image
+      changed = true
+    }
+  }
+  if (next.community && !next.community.gallery?.length && seeded.community?.gallery) {
+    next.community.gallery = seeded.community.gallery
+    changed = true
+  }
+  if (changed) {
+    const { id: _id, updatedAt: _u, createdAt: _c, globalType: _g, ...data } = next as typeof next & {
+      globalType?: string
+    }
+    await payload.updateGlobal({ slug: 'home-page', data: { ...data, _status: 'published' }, context })
+    log('added missing photos to the home page')
+  }
 }
 
 // --- Posts -----------------------------------------------------------------
@@ -97,8 +144,22 @@ if (!homePage.updatedAt) {
 const editorConfig = await editorConfigFactory.default({ config: payload.config })
 
 for (const post of posts) {
-  const existing = await payload.find({ collection: 'posts', where: { slug: { equals: post.slug } }, limit: 1 })
-  if (existing.docs[0]) continue
+  const existing = await payload.find({
+    collection: 'posts',
+    where: { slug: { equals: post.slug } },
+    limit: 1,
+    depth: 0,
+  })
+  const found = existing.docs[0]
+  if (found) {
+    // Created before the photos existed: add the cover now, keeping any edits.
+    const cover = post.coverImage ? mediaIds[post.coverImage] : undefined
+    if (cover && !found.coverImage) {
+      await payload.update({ collection: 'posts', id: found.id, data: { coverImage: cover }, context })
+      log(`added cover photo to "${post.title}"`)
+    }
+    continue
+  }
 
   const html = await fs.readFile(path.resolve(dirname, 'content', post.htmlFile), 'utf8')
   const content = convertHTMLToLexical({ editorConfig, html, JSDOM })

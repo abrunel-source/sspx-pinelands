@@ -75,8 +75,8 @@ Without `RESEND_API_KEY`, emails (form notifications, password resets) are print
 1. Create a Postgres database (for example Neon, from the Vercel Marketplace) and a **Vercel Blob** store, and connect both to the project.
 2. In Resend, verify the sending domain (e.g. `fsspx.co.za`) and create an API key.
 3. Set the environment variables from `.env.example` in Vercel: `DATABASE_URL`, `PAYLOAD_SECRET`, `PREVIEW_SECRET`, `NEXT_PUBLIC_SERVER_URL=https://fsspx.co.za`, `RESEND_API_KEY`, `RESEND_FROM_ADDRESS`, `BLOB_READ_WRITE_TOKEN`.
-4. Deploy. `vercel.json` runs `npm run ci`, which applies database migrations before building.
-5. Run the seed once against the production database from your machine, with `DATABASE_URL` and `BLOB_READ_WRITE_TOKEN` pointing at production. Alternatively, open `/admin` and create the first account by hand.
+4. Deploy. `vercel.json` runs `npm run ci`, which applies database migrations, loads the starting content if the media library is still empty (photos, home page, Mass times, the migrated post, starter roles), then builds. Content is only loaded on a database without photos, so later edits and deletions are never undone by a deploy. Without a Blob store connected, the text content loads and the photos follow on the first deploy after you connect one.
+5. Open `/admin` and create the first account; it becomes a super admin.
 
 ## Changing the content model
 
