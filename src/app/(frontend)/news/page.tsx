@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { MediaImage } from '@/components/site/MediaImage'
+import { Divider } from '@/components/site/Ornament'
 import { CATEGORY_LABELS, formatDate } from '@/lib/format'
 import { getPosts } from '@/lib/queries'
 
@@ -18,10 +19,11 @@ export default async function NewsIndex() {
 
   return (
     <>
-      <div className="page-head">
+      <div className="page-head pat-navy rule-bottom on-dark">
         <div className="container">
           <p className="eyebrow">News &amp; Reading</p>
           <h1 className="display">From the chapel</h1>
+          <Divider light />
           <p className="lede">Announcements, reading and parish news.</p>
         </div>
       </div>

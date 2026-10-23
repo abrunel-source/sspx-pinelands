@@ -1,7 +1,7 @@
 import { draftMode } from 'next/headers'
 import { cache } from 'react'
 
-import type { Event, HomePage, MassSchedule, Post, SiteSetting } from '@/payload-types'
+import type { Event, Feast, HomePage, MassSchedule, Post, SiteSetting } from '@/payload-types'
 
 import { getPayloadClient } from './payload'
 
@@ -78,4 +78,18 @@ export const getPostBySlug = cache(async (slug: string): Promise<Post | null> =>
     },
   })
   return docs[0] ?? null
+})
+
+/** The next feasts from today (Cape Town time) for "Feasts in the coming days". */
+export const getUpcomingFeasts = cache(async (limit = 4): Promise<Feast[]> => {
+  const payload = await getPayloadClient()
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Johannesburg' }).format(new Date())
+  const { docs } = await payload.find({
+    collection: 'feasts',
+    depth: 0,
+    limit,
+    sort: 'date',
+    where: { date: { greater_than_equal: `${today}T00:00:00+02:00` } },
+  })
+  return docs
 })

@@ -4,7 +4,7 @@ import type { MassSchedule, SiteSetting } from '@/payload-types'
 import { telHref } from '@/lib/format'
 
 export const Footer = ({ settings, schedule }: { settings: SiteSetting; schedule: MassSchedule }) => (
-  <footer className="site-footer on-dark">
+  <footer className="site-footer pat-night rule-top on-dark">
     <div className="container footer-grid">
       <div className="footer-col footer-brand">
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -32,6 +32,7 @@ export const Footer = ({ settings, schedule }: { settings: SiteSetting; schedule
         <h2>Explore</h2>
         <ul>
           <li><Link href="/#visit">Plan your visit</Link></li>
+          <li><Link href="/#calendar">Feasts &amp; calendar</Link></li>
           <li><Link href="/#listen">Sermons &amp; podcast</Link></li>
           <li><Link href="/#school">Homeschooling</Link></li>
           <li><Link href="/news">News</Link></li>
@@ -50,7 +51,9 @@ export const Footer = ({ settings, schedule }: { settings: SiteSetting; schedule
     </div>
     <div className="container footer-bottom">
       <span>© {new Date().getFullYear()} SSPX Cape Town. All rights reserved.</span>
-      <span>Ad Majorem Dei Gloriam</span>
+      <span className="motto" lang="la">
+        Ad Majorem Dei Gloriam
+      </span>
     </div>
   </footer>
 )

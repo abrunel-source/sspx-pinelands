@@ -25,7 +25,7 @@ const Status = ({ state, id }: { state: FormState; id: string }) => (
 export const EmailSignupForm = ({
   formType,
   buttonLabel,
-  buttonClass = 'btn btn-ink',
+  buttonClass = 'btn btn-navy',
   inputId,
 }: {
   formType: 'newsletter' | 'school'
@@ -66,7 +66,7 @@ export const ContactForm = ({ topics, phone }: { topics: string[]; phone: string
 
   if (state.status === 'success') {
     return (
-      <div className="contact-form contact-form--done">
+      <div className="contact-form contact-form--done double-frame">
         <h3 className="serif">Message sent</h3>
         <Status state={state} id="contact-status" />
       </div>
@@ -74,7 +74,7 @@ export const ContactForm = ({ topics, phone }: { topics: string[]; phone: string
   }
 
   return (
-    <form action={action} className="contact-form" noValidate aria-describedby="contact-status">
+    <form action={action} className="contact-form double-frame" noValidate aria-describedby="contact-status">
       <input type="hidden" name="formType" value="contact" />
       <Honeypot />
       <div className="row">

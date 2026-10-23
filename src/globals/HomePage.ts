@@ -48,7 +48,13 @@ export const HomePage: GlobalConfig = {
           name: 'hero',
           label: 'Welcome',
           fields: [
-            { name: 'kicker', type: 'text', defaultValue: 'Priestly Society of Saint Pius X · Cape Town' },
+            {
+              name: 'kicker',
+              label: 'Line above the heading',
+              type: 'text',
+              defaultValue: 'Introibo ad altare Dei',
+              admin: { description: 'Shown in small gold capitals, e.g. “Introibo ad altare Dei”.' },
+            },
             heading('The Traditional Latin Mass, offered every week in Cape Town.'),
             {
               name: 'intro',

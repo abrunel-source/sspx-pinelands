@@ -33,6 +33,13 @@ export const RESOURCES = [
     supportsOwn: true,
   },
   {
+    slug: 'feasts',
+    label: 'Feasts & calendar',
+    kind: 'collection',
+    description: 'The liturgical calendar shown in “Feasts in the coming days”.',
+    actions: ['read', 'create', 'update', 'delete'],
+  },
+  {
     slug: 'media',
     label: 'Media library',
     kind: 'collection',

@@ -1,5 +1,6 @@
 import * as migration_20261023_160055_initial from './20261023_160055_initial';
 import * as migration_20261023_164011_blob_storage_fields from './20261023_164011_blob_storage_fields';
+import * as migration_20261023_180406_feasts_calendar from './20261023_180406_feasts_calendar';
 
 export const migrations = [
   {
@@ -10,6 +11,11 @@ export const migrations = [
   {
     up: migration_20261023_164011_blob_storage_fields.up,
     down: migration_20261023_164011_blob_storage_fields.down,
-    name: '20261023_164011_blob_storage_fields'
+    name: '20261023_164011_blob_storage_fields',
+  },
+  {
+    up: migration_20261023_180406_feasts_calendar.up,
+    down: migration_20261023_180406_feasts_calendar.down,
+    name: '20261023_180406_feasts_calendar'
   },
 ];

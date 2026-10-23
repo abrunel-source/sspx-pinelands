@@ -15,6 +15,23 @@ const eventFormat = new Intl.DateTimeFormat('en-ZA', {
   timeZone: 'Africa/Johannesburg',
 })
 
+const feastFormat = new Intl.DateTimeFormat('en-GB', {
+  weekday: 'short',
+  day: 'numeric',
+  month: 'short',
+  timeZone: 'Africa/Johannesburg',
+})
+
+/** "Sun 25 Oct" */
+export const formatFeastDate = (value?: string | null) =>
+  value
+    ? feastFormat
+        .formatToParts(new Date(value))
+        .filter((p) => p.type !== 'literal')
+        .map((p) => p.value)
+        .join(' ')
+    : ''
+
 export const formatDate = (value?: string | null) => (value ? dateFormat.format(new Date(value)) : '')
 
 export const formatEventDate = (value?: string | null) => (value ? eventFormat.format(new Date(value)) : '')

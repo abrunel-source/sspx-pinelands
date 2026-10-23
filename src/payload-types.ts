@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     posts: Post;
     events: Event;
+    feasts: Feast;
     media: Media;
     'form-submissions': FormSubmission;
     users: User;
@@ -83,6 +84,7 @@ export interface Config {
   collectionsSelect: {
     posts: PostsSelect<false> | PostsSelect<true>;
     events: EventsSelect<false> | EventsSelect<true>;
+    feasts: FeastsSelect<false> | FeastsSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
@@ -345,6 +347,15 @@ export interface Role {
       ownOnly?: boolean | null;
     };
     /**
+     * The liturgical calendar shown in “Feasts in the coming days”.
+     */
+    feasts?: {
+      read?: boolean | null;
+      create?: boolean | null;
+      update?: boolean | null;
+      delete?: boolean | null;
+    };
+    /**
      * Photos and files used across the website.
      */
     media?: {
@@ -433,6 +444,20 @@ export interface Event {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * Feasts shown in “Feasts in the coming days” on the home page. The next four from today appear automatically.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "feasts".
+ */
+export interface Feast {
+  id: number;
+  title: string;
+  date: string;
+  colour: 'white' | 'red' | 'green' | 'violet' | 'rose' | 'black';
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * Everything sent from the website forms. Each one is also emailed to the address in Site settings.
@@ -584,6 +609,10 @@ export interface PayloadLockedDocument {
         value: number | Event;
       } | null)
     | ({
+        relationTo: 'feasts';
+        value: number | Feast;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -681,6 +710,17 @@ export interface EventsSelect<T extends boolean = true> {
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "feasts_select".
+ */
+export interface FeastsSelect<T extends boolean = true> {
+  title?: T;
+  date?: T;
+  colour?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -820,6 +860,14 @@ export interface RolesSelect<T extends boolean = true> {
               publish?: T;
               ownOnly?: T;
             };
+        feasts?:
+          | T
+          | {
+              read?: T;
+              create?: T;
+              update?: T;
+              delete?: T;
+            };
         media?:
           | T
           | {
@@ -956,6 +1004,9 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 export interface HomePage {
   id: number;
   hero: {
+    /**
+     * Shown in small gold capitals, e.g. “Introibo ad altare Dei”.
+     */
     kicker?: string | null;
     heading: string;
     intro?: string | null;

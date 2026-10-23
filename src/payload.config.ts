@@ -10,6 +10,7 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 
 import { Events } from './collections/Events'
+import { Feasts } from './collections/Feasts'
 import { FormSubmissions } from './collections/FormSubmissions'
 import { Media } from './collections/Media'
 import { Posts } from './collections/Posts'
@@ -50,7 +51,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Posts, Events, Media, FormSubmissions, Users, Roles],
+  collections: [Posts, Events, Feasts, Media, FormSubmissions, Users, Roles],
   globals: [HomePage, MassSchedule, SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

@@ -3,6 +3,7 @@ import { draftMode } from 'next/headers'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+import { Divider } from '@/components/site/Ornament'
 import { RichText, extractHeadings } from '@/components/site/RichText'
 import { CATEGORY_LABELS, formatDate } from '@/lib/format'
 import { getPayloadClient } from '@/lib/payload'
@@ -58,13 +59,14 @@ export default async function PostPage({ params }: Props) {
 
   return (
     <article>
-      <div className="page-head">
-        <div className="container article-header">
+      <div className="page-head pat-navy rule-bottom on-dark">
+        <div className="container">
           <p className="eyebrow">
             {post.category ? CATEGORY_LABELS[post.category] : 'News'}
             {preview && post._status !== 'published' ? ' · Draft' : ''}
           </p>
           <h1 className="display">{post.title}</h1>
+          <Divider light />
           <p className="byline">
             {post.author && (
               <>
@@ -83,7 +85,7 @@ export default async function PostPage({ params }: Props) {
           </div>
           {showToc && (
             <aside aria-label="Contents">
-              <details className="toc" open>
+              <details className="toc double-frame" open>
                 <summary>Contents</summary>
                 <ol>
                   {headings.map((h) => (

@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from 'next'
-import { Cormorant_Garamond, Public_Sans } from 'next/font/google'
+import { Cinzel, Cormorant_Garamond, EB_Garamond } from 'next/font/google'
 import { draftMode } from 'next/headers'
 
 import { Footer } from '@/components/site/Footer'
@@ -11,6 +11,15 @@ import { getServerSideURL } from '@/lib/url'
 
 import '@/styles/global.css'
 
+// Cinzel: inscriptional capitals for labels and buttons. Cormorant Garamond:
+// headings. EB Garamond: body text.
+const caps = Cinzel({
+  subsets: ['latin'],
+  weight: ['500', '600'],
+  variable: '--font-caps',
+  display: 'swap',
+})
+
 const serif = Cormorant_Garamond({
   subsets: ['latin'],
   weight: ['500', '600'],
@@ -19,10 +28,11 @@ const serif = Cormorant_Garamond({
   display: 'swap',
 })
 
-const sans = Public_Sans({
+const body = EB_Garamond({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
-  variable: '--font-sans',
+  style: ['normal', 'italic'],
+  variable: '--font-body',
   display: 'swap',
 })
 
@@ -38,7 +48,7 @@ export const metadata: Metadata = {
   openGraph: { type: 'website', locale: 'en_ZA', siteName: 'SSPX Cape Town' },
 }
 
-export const viewport: Viewport = { themeColor: '#17181C' }
+export const viewport: Viewport = { themeColor: '#16213A' }
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
   const [{ isEnabled: preview }, settings, schedule] = await Promise.all([
@@ -48,7 +58,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
   ])
 
   return (
-    <html lang="en-ZA" className={`${serif.variable} ${sans.variable}`}>
+    <html lang="en-ZA" className={`${caps.variable} ${serif.variable} ${body.variable}`}>
       <head>
         {/* Lets CSS collapse the mobile menu only when JavaScript can reopen it. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />

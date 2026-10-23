@@ -14,6 +14,7 @@ export const roles: Omit<Role, 'id' | 'createdAt' | 'updatedAt'>[] = [
     permissions: {
       posts: all,
       events: all,
+      feasts: { read: true, create: true, update: true, delete: true },
       media: { read: true, create: true, update: true, delete: true },
       formSubmissions: { read: true, update: true, delete: true },
       homePage: { read: true, update: true, publish: true },
@@ -29,6 +30,7 @@ export const roles: Omit<Role, 'id' | 'createdAt' | 'updatedAt'>[] = [
     permissions: {
       posts: all,
       events: all,
+      feasts: { read: true, create: true, update: true, delete: true },
       media: { read: true, create: true, update: true, delete: true },
       homePage: { read: true, update: true, publish: true },
       massSchedule: { read: true, update: true, publish: true },
@@ -50,6 +52,7 @@ export const roles: Omit<Role, 'id' | 'createdAt' | 'updatedAt'>[] = [
       formSubmissions: { read: true, update: true },
       massSchedule: { read: true, update: true, publish: true },
       events: all,
+      feasts: { read: true, create: true, update: true, delete: true },
     } satisfies Perms,
   },
 ]
@@ -75,7 +78,7 @@ export const massSchedule: Partial<MassSchedule> = {
 
 export const home = (media: Record<string, number>): Partial<HomePage> => ({
   hero: {
-    kicker: 'Priestly Society of Saint Pius X · Cape Town',
+    kicker: 'Introibo ad altare Dei',
     heading: 'The Traditional Latin Mass, offered every week in Cape Town.',
     intro:
       'Our Lady of the Blessed Sacrament upholds Catholic tradition and prevails in her call of souls to their everlasting home. All are welcome.',
