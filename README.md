@@ -15,7 +15,7 @@ Website and content management system for the **Chapel of Our Lady of the Blesse
 | **Content › News & articles** | News posts with rich text, cover image, author, category and SEO fields. Old WordPress links redirect here. |
 | **Content › Events** | The next upcoming event appears in the Community section. Otherwise it reads "Coming soon". |
 | **Content › Media library** | Photos, with focal point and required alt text. |
-| **Inbox › Form submissions** | Every contact message, mailing-list sign-up and school registration, with a status and internal notes. |
+| **Inbox › Form submissions** | Every contact message, mailing-list sign-up and school registration, with a status and internal notes. Messages the spam filter caught are marked **Spam** and are not emailed. |
 | **Settings › Site settings** | Phone, email, address, map, YouTube and podcast links, and **the address website forms are emailed to** (default `o.keiser@fsspx.email`). |
 | **Admin › Users / Roles** | Who can sign in, and what each person can see and change. |
 
@@ -53,6 +53,18 @@ Built-in safeguards:
 Anyone with "Edit users" can still give *other* accounts any role, so give that permission only to people you trust with everything.
 
 **Adding someone:** Admin › Users › Create new. Enter their name and email, choose their roles and set a temporary password. Then ask them to use **Forgot password?** on the login screen to choose their own.
+
+## Spam protection
+
+The website forms have no puzzle for visitors to solve. Instead, every message has to pass these checks on the server:
+
+- **Form ticket.** The page fetches a signed ticket once it has loaded in a browser. Bots that post straight to the server never get one. A contact message sent less than 3 seconds after the page loaded is treated as a bot (1.5 seconds for the email-only forms).
+- **Hidden field.** A field people never see; bots tend to fill it in.
+- **Rate limits** (counted in the database, so they hold on every server): 5 messages per sender per 10 minutes, and at most 30 emailed messages per hour for the whole site. Senders are recognised by a one-way code of their IP address; the address itself is never stored.
+- **Duplicates.** The same message from the same email within a day is only sent once.
+- **Link spam.** Messages with HTML or BBCode links, a link in the name, or more than two links are saved as **Spam** and not emailed. Check the Spam status now and then in case a real message was caught.
+
+Bots that fail the ticket or hidden-field checks are shown the normal thank-you message, so they cannot tell what stopped them. The limits are at the top of `src/app/(frontend)/actions.ts`.
 
 ## Automatic updates
 

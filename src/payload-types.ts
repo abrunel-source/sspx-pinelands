@@ -464,7 +464,7 @@ export interface Feast {
   createdAt: string;
 }
 /**
- * Everything sent from the website forms. Each one is also emailed to the address in Site settings.
+ * Everything sent from the website forms. Each one is also emailed to the address in Site settings, except messages marked Spam by the spam filter.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "form-submissions".
@@ -472,7 +472,7 @@ export interface Feast {
 export interface FormSubmission {
   id: number;
   formType: 'contact' | 'newsletter' | 'school';
-  status?: ('new' | 'in-progress' | 'done') | null;
+  status?: ('new' | 'in-progress' | 'done' | 'spam') | null;
   name?: string | null;
   email: string;
   topic?: string | null;
@@ -485,6 +485,7 @@ export interface FormSubmission {
    * Whether the notification email was sent successfully.
    */
   emailDelivered?: boolean | null;
+  ipHash?: string | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -806,6 +807,7 @@ export interface FormSubmissionsSelect<T extends boolean = true> {
   message?: T;
   notes?: T;
   emailDelivered?: T;
+  ipHash?: T;
   updatedAt?: T;
   createdAt?: T;
 }

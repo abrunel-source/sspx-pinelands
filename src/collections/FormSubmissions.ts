@@ -16,7 +16,7 @@ export const FormSubmissions: CollectionConfig = {
     useAsTitle: 'email',
     defaultColumns: ['formType', 'name', 'email', 'topic', 'status', 'createdAt'],
     description:
-      'Everything sent from the website forms. Each one is also emailed to the address in Site settings.',
+      'Everything sent from the website forms. Each one is also emailed to the address in Site settings, except messages marked Spam by the spam filter.',
   },
   // Submissions are created by the website's server code, never through the public API.
   access: { ...collectionAccess('form-submissions', 'none'), create: () => false },
@@ -41,6 +41,7 @@ export const FormSubmissions: CollectionConfig = {
             { label: 'New', value: 'new' },
             { label: 'In progress', value: 'in-progress' },
             { label: 'Done', value: 'done' },
+            { label: 'Spam', value: 'spam' },
           ],
           admin: { width: '50%' },
         },
@@ -70,5 +71,7 @@ export const FormSubmissions: CollectionConfig = {
         description: 'Whether the notification email was sent successfully.',
       },
     },
+    // One-way code for the sender's IP address, used only for rate limits.
+    { name: 'ipHash', type: 'text', index: true, admin: { hidden: true } },
   ],
 }

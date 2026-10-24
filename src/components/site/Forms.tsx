@@ -1,10 +1,25 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useEffect, useState } from 'react'
 
-import { type FormState, submitForm } from '@/app/(frontend)/actions'
+import { type FormState, getFormTicket, submitForm } from '@/app/(frontend)/actions'
 
 const initial: FormState = { status: 'idle' }
+
+/** Spam check: a signed ticket fetched once the page runs, renewed after every reply. */
+const useTicket = (state: FormState) => {
+  const [ticket, setTicket] = useState('')
+  useEffect(() => {
+    let live = true
+    getFormTicket()
+      .then((value) => live && setTicket(value))
+      .catch(() => {})
+    return () => {
+      live = false
+    }
+  }, [state])
+  return ticket
+}
 
 const Honeypot = () => (
   <div className="honeypot" aria-hidden="true">
@@ -34,10 +49,12 @@ export const EmailSignupForm = ({
   inputId: string
 }) => {
   const [state, action, pending] = useActionState(submitForm, initial)
+  const ticket = useTicket(state)
   if (state.status === 'success') return <Status state={state} id={`${inputId}-status`} />
   return (
     <form action={action} className="inline-form" noValidate>
       <input type="hidden" name="formType" value={formType} />
+      <input type="hidden" name="ticket" value={ticket} />
       <Honeypot />
       <label htmlFor={inputId} className="visually-hidden">
         Email address
@@ -63,6 +80,7 @@ export const EmailSignupForm = ({
 
 export const ContactForm = ({ topics, phone }: { topics: string[]; phone: string }) => {
   const [state, action, pending] = useActionState(submitForm, initial)
+  const ticket = useTicket(state)
 
   if (state.status === 'success') {
     return (
@@ -76,6 +94,7 @@ export const ContactForm = ({ topics, phone }: { topics: string[]; phone: string
   return (
     <form action={action} className="contact-form double-frame" noValidate aria-describedby="contact-status">
       <input type="hidden" name="formType" value="contact" />
+      <input type="hidden" name="ticket" value={ticket} />
       <Honeypot />
       <div className="row">
         <div className="field">
