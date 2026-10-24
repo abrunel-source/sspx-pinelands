@@ -60,7 +60,7 @@ Two scheduled tasks keep the home page current without anyone editing it (schedu
 
 | When (Cape Town) | What |
 | --- | --- |
-| Every day, 07:00 | Fetches the newest video from the chapel's YouTube channel (the Sunday homily) and shows it in the Homilies section. |
+| Every day, 07:00 | Fetches the newest video from the chapel's YouTube channel (the Sunday homily) and shows it in the Homilies section. If YouTube's feed is down, it reads the channel's Videos page instead; if both fail, the last homily stays up. |
 | Fridays, 18:00 | Tops up **Feasts & calendar** for the next ten weeks from the 1962 Roman calendar ([Missale Meum](https://www.missalemeum.com)): Sundays and feasts of the first and second class, with their liturgical colours. Feasts added by hand are never changed and replace the automatic entry for that day. |
 
 Both also run on every deploy, and can be run by hand with `npm run sync`. Set `CRON_SECRET` in Vercel so only Vercel's scheduler can trigger them.
