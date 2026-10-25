@@ -2,6 +2,14 @@ import type { HomePage, MassSchedule, Role } from '@/payload-types'
 
 type Perms = NonNullable<Role['permissions']>
 
+export const PROCESSION_PHOTO_ALT =
+  'Father Keiser in white and gold vestments holding the monstrance with the Blessed Sacrament under the trees of the park, during the Christ the King procession'
+
+/** Keeps Father Keiser and the monstrance in frame when the photo is cropped. */
+export const PROCESSION_FOCAL_POINT = { focalX: 57, focalY: 30 }
+
+export const PROCESSION_GALLERY_ITEM = { title: 'Christ the King', caption: 'The Blessed Sacrament carried around the park' }
+
 export const SCHOOL_PHOTO_ALT =
   'Homeschool pupils in red blazers with their priest, holding their 2024 virtue distinction certificates'
 
@@ -134,6 +142,7 @@ export const home = (media: Record<string, number>): Partial<HomePage> => ({
     intro:
       'Feast days, fêtes, shared meals and Christmas preparations. Life at Our Lady of the Blessed Sacrament extends well beyond Sunday morning.',
     gallery: [
+      { image: media['christ-the-king-procession.jpg'], ...PROCESSION_GALLERY_ITEM },
       { image: media['community-all-saints.jpg'], title: 'All Saints', caption: 'The children as their patron saints' },
       { image: media['community-fete.jpg'], title: 'Parish fête', caption: 'Stalls on the chapel lawn' },
       { image: media['community-cook-off.jpg'], title: 'Cook-off', caption: 'Food from many nations' },
@@ -177,6 +186,19 @@ export const home = (media: Record<string, number>): Partial<HomePage> => ({
 // --- Posts migrated from WordPress -------------------------------------------
 
 export const posts = [
+  {
+    slug: 'christ-the-king-procession-2026',
+    title: 'Christ the King: the Blessed Sacrament carried through Pinelands',
+    htmlFile: 'christ-the-king-procession-2026.html',
+    category: 'parish-life' as const,
+    publishedAt: '2026-10-25T12:00:00.000Z',
+    coverImage: 'christ-the-king-procession.jpg',
+    excerpt:
+      'On the Feast of Christ the King, Father Keiser carried the Blessed Sacrament in procession around the park across from the chapel.',
+    metaTitle: 'Christ the King procession · SSPX Cape Town',
+    metaDescription:
+      'Father Keiser carried the Blessed Sacrament in procession around the park in Pinelands on the Feast of Christ the King, 25 October 2026.',
+  },
   {
     slug: 'an-open-letter-to-confused-catholics',
     title: 'An Open Letter to Confused Catholics',

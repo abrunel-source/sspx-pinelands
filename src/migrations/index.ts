@@ -3,6 +3,7 @@ import * as migration_20261023_164011_blob_storage_fields from './20261023_16401
 import * as migration_20261023_180406_feasts_calendar from './20261023_180406_feasts_calendar';
 import * as migration_20261023_182725_homilies_and_auto_updates from './20261023_182725_homilies_and_auto_updates';
 import * as migration_20261024_221910_spam_protection from './20261024_221910_spam_protection';
+import * as migration_20261025_190000_christ_the_king_procession from './20261025_190000_christ_the_king_procession';
 
 export const migrations = [
   {
@@ -28,6 +29,11 @@ export const migrations = [
   {
     up: migration_20261024_221910_spam_protection.up,
     down: migration_20261024_221910_spam_protection.down,
-    name: '20261024_221910_spam_protection'
+    name: '20261024_221910_spam_protection',
+  },
+  {
+    up: migration_20261025_190000_christ_the_king_procession.up,
+    down: migration_20261025_190000_christ_the_king_procession.down,
+    name: '20261025_190000_christ_the_king_procession'
   },
 ];

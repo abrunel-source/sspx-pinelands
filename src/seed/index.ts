@@ -22,7 +22,15 @@ import { convertHTMLToLexical, editorConfigFactory } from '@payloadcms/richtext-
 import { JSDOM } from 'jsdom'
 import { getPayload } from 'payload'
 
-import { SCHOOL_PHOTO_ALT, home, massSchedule, posts, roles } from './data'
+import {
+  PROCESSION_FOCAL_POINT,
+  PROCESSION_PHOTO_ALT,
+  SCHOOL_PHOTO_ALT,
+  home,
+  massSchedule,
+  posts,
+  roles,
+} from './data'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 // A fresh context for every call: Payload's storage plugin keeps a "skip
@@ -33,7 +41,7 @@ const context = () => ({ disableRevalidate: true })
 const payload = await getPayload({ config })
 const log = (msg: string) => payload.logger.info(`[seed] ${msg}`)
 
-const MEDIA: { file: string; alt: string; caption?: string }[] = [
+const MEDIA: { file: string; alt: string; caption?: string; focalX?: number; focalY?: number }[] = [
   { file: 'hero-altar.jpg', alt: 'The high altar of the chapel of Our Lady of the Blessed Sacrament' },
   { file: 'park-morning.jpg', alt: 'Morning light through the trees in the park across from the chapel' },
   { file: 'community-all-saints.jpg', alt: 'Children dressed as their patron saints with the priest' },
@@ -42,6 +50,7 @@ const MEDIA: { file: string; alt: string; caption?: string }[] = [
   { file: 'community-advent.jpg', alt: 'Decorating the Christmas tree in the hall' },
   { file: 'school.jpg', alt: 'Pupils in red blazers with their priest and teachers on the chapel steps' },
   { file: 'school-distinctions.jpg', alt: SCHOOL_PHOTO_ALT },
+  { file: 'christ-the-king-procession.jpg', alt: PROCESSION_PHOTO_ALT, ...PROCESSION_FOCAL_POINT },
   { file: 'open-letter-cover.jpg', alt: 'Cover of Open Letter to Confused Catholics by Archbishop Marcel Lefebvre' },
 ]
 
@@ -124,7 +133,7 @@ for (const item of canUpload ? MEDIA : []) {
   try {
     const doc = await payload.create({
       collection: 'media',
-      data: { alt: item.alt, caption: item.caption },
+      data: { alt: item.alt, caption: item.caption, focalX: item.focalX, focalY: item.focalY },
       filePath,
       context: context(),
     })

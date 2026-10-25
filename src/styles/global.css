@@ -1103,11 +1103,15 @@ summary:focus-visible {
 
 /* Community */
 .gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 24px;
 }
+/* Any number of photos: up to five a row on wide screens, a short last row centred. */
 .gallery figure {
+  flex: 1 1 200px;
+  max-width: 300px;
   margin: 0;
   display: flex;
   flex-direction: column;
@@ -1684,6 +1688,20 @@ button:disabled {
   }
 }
 
+/* Cover photo above the article; its width is set from the photo's shape on the page. */
+.article-cover {
+  max-width: 720px;
+  margin: 0 0 48px;
+}
+.article-cover img {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 8px;
+  border: 1px solid var(--gold);
+  border-radius: var(--radius);
+  background: var(--card);
+}
 .prose {
   max-width: 720px;
   font-size: 20px;
