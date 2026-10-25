@@ -45,6 +45,8 @@ export const metadata: Metadata = {
   description:
     'The Traditional Latin Mass, offered every week at the Chapel of Our Lady of the Blessed Sacrament, Society of Saint Pius X, Pinelands, Cape Town.',
   icons: { icon: '/favicon.svg' },
+  // Phone numbers are already links; stops Safari rewriting the page before React takes over.
+  formatDetection: { telephone: false },
   openGraph: { type: 'website', locale: 'en_ZA', siteName: 'SSPX Cape Town' },
 }
 
@@ -60,8 +62,10 @@ export default async function FrontendLayout({ children }: { children: React.Rea
   return (
     <html lang="en-ZA" className={`${caps.variable} ${serif.variable} ${body.variable}`}>
       <head>
-        {/* Lets CSS collapse the mobile menu only when JavaScript can reopen it. */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('js')" }} />
+        {/* Without JavaScript the Menu button cannot work, so show the menu open instead. */}
+        <noscript
+          dangerouslySetInnerHTML={{ __html: '<style>.nav-toggle{display:none!important}.main-nav{display:block!important}</style>' }}
+        />
       </head>
       <body>
         <a className="skip-link" href="#main">

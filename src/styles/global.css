@@ -409,16 +409,15 @@ summary:focus-visible {
 }
 
 @media (max-width: 1040px) {
-  .js .nav-toggle {
+  /* Collapsed behind the Menu button; see the <noscript> rule in the layout. */
+  .nav-toggle {
     display: inline-flex;
   }
   .main-nav {
     flex-basis: 100%;
-  }
-  .js .main-nav {
     display: none;
   }
-  .js .main-nav.is-open {
+  .main-nav.is-open {
     display: block;
   }
   .main-nav ul {
