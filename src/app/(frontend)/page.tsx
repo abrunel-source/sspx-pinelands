@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ContactForm, EmailSignupForm } from '@/components/site/Forms'
 import { MediaImage } from '@/components/site/MediaImage'
 import { Divider, Hearts, RoseWindow } from '@/components/site/Ornament'
+import { YouTubeEmbed } from '@/components/site/YouTubeEmbed'
 import { CATEGORY_LABELS, formatDate, formatEventDate, formatFeastDate, telHref, toRoman } from '@/lib/format'
 import { getHomePage, getMassSchedule, getNextEvent, getPosts, getSiteSettings, getUpcomingFeasts } from '@/lib/queries'
 import { getServerSideURL } from '@/lib/url'
@@ -284,18 +285,20 @@ export default async function HomePage() {
             {(homily?.videoId || settings.youtubePlaylistId) && (
               <article className="media-card">
                 <div className="media-embed">
-                  <iframe
-                    src={
-                      homily?.videoId
-                        ? `https://www.youtube-nocookie.com/embed/${encodeURIComponent(homily.videoId)}?rel=0`
-                        : `https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(settings.youtubePlaylistId ?? '')}`
-                    }
-                    title={homily?.publishedAt ? `Homily of ${formatDate(homily.publishedAt)}` : 'Latest homily from the chapel on YouTube'}
-                    loading="lazy"
-                    allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allowFullScreen
-                  />
+                  {homily?.videoId ? (
+                    <YouTubeEmbed
+                      videoId={homily.videoId}
+                      title={homily.publishedAt ? `Homily of ${formatDate(homily.publishedAt)}` : homily.title || 'Latest homily'}
+                    />
+                  ) : (
+                    <iframe
+                      src={`https://www.youtube-nocookie.com/embed/videoseries?list=${encodeURIComponent(settings.youtubePlaylistId ?? '')}`}
+                      title="Homilies from the chapel on YouTube"
+                      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allowFullScreen
+                    />
+                  )}
                 </div>
                 <div className="media-body">
                   <span className="caps-label">
