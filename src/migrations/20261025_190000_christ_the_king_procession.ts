@@ -6,6 +6,7 @@ import { convertHTMLToLexical, editorConfigFactory } from '@payloadcms/richtext-
 import { JSDOM } from 'jsdom'
 
 import { PROCESSION_FOCAL_POINT, PROCESSION_GALLERY_ITEM, PROCESSION_PHOTO_ALT, posts } from '../seed/data'
+import { withPhotos } from '../seed/procession'
 
 // Content only, no schema change: the Christ the King procession of 25 October
 // 2026, as a news post and the first photo of the parish life gallery.
@@ -45,7 +46,8 @@ export async function up({ payload, req }: MigrateUpArgs): Promise<void> {
         category: post.category,
         publishedAt: post.publishedAt,
         coverImage: photo.id,
-        content: convertHTMLToLexical({ editorConfig, html, JSDOM }),
+        // The photos inside the article are added by the next migration.
+        content: withPhotos(convertHTMLToLexical({ editorConfig, html, JSDOM }), {}),
         meta: { title: post.metaTitle, description: post.metaDescription },
         _status: 'published',
       },

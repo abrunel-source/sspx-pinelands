@@ -31,6 +31,7 @@ import {
   posts,
   roles,
 } from './data'
+import { PROCESSION_PHOTOS, withPhotos } from './procession'
 
 const dirname = path.dirname(fileURLToPath(import.meta.url))
 // A fresh context for every call: Payload's storage plugin keeps a "skip
@@ -51,6 +52,7 @@ const MEDIA: { file: string; alt: string; caption?: string; focalX?: number; foc
   { file: 'school.jpg', alt: 'Pupils in red blazers with their priest and teachers on the chapel steps' },
   { file: 'school-distinctions.jpg', alt: SCHOOL_PHOTO_ALT },
   { file: 'christ-the-king-procession.jpg', alt: PROCESSION_PHOTO_ALT, ...PROCESSION_FOCAL_POINT },
+  ...PROCESSION_PHOTOS,
   { file: 'open-letter-cover.jpg', alt: 'Cover of Open Letter to Confused Catholics by Archbishop Marcel Lefebvre' },
 ]
 
@@ -221,7 +223,7 @@ for (const post of posts) {
   }
 
   const html = await fs.readFile(path.resolve(dirname, 'content', post.htmlFile), 'utf8')
-  const content = convertHTMLToLexical({ editorConfig, html, JSDOM })
+  const content = withPhotos(convertHTMLToLexical({ editorConfig, html, JSDOM }), mediaIds)
 
   await payload.create({
     collection: 'posts',

@@ -1688,6 +1688,43 @@ button:disabled {
   }
 }
 
+/* Photos inside an article: framed, with captions; a run of photos sits side by side. */
+.post-photos {
+  margin: 2em 0;
+  display: grid;
+  gap: 18px;
+}
+.post-photos.is-group {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+}
+.post-photos figure {
+  margin: 0;
+}
+.post-photos a {
+  display: block;
+}
+.post-photos img {
+  display: block;
+  width: 100%;
+  height: auto;
+  padding: 6px;
+  border: 1px solid var(--gold);
+  border-radius: var(--radius);
+  background: var(--card);
+}
+.post-photos.is-group img {
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+}
+.post-photos figcaption {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 16px;
+  font-style: italic;
+  line-height: 1.4;
+  text-align: center;
+}
+
 /* Cover photo above the article; its width is set from the photo's shape on the page. */
 .article-cover {
   max-width: 720px;
