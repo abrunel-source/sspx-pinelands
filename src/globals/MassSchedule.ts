@@ -29,6 +29,15 @@ export const MassSchedule: GlobalConfig = {
       },
     },
     {
+      name: 'noticeUntil',
+      label: 'Show the notice until',
+      type: 'date',
+      admin: {
+        date: { pickerAppearance: 'dayOnly', displayFormat: 'd MMMM yyyy' },
+        description: 'Optional. After this day the usual Sunday times come back on their own. Leave empty to show the notice until you remove it.',
+      },
+    },
+    {
       name: 'masses',
       type: 'array',
       required: true,

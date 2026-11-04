@@ -5,16 +5,6 @@ const dateFormat = new Intl.DateTimeFormat('en-ZA', {
   timeZone: 'Africa/Johannesburg',
 })
 
-const eventFormat = new Intl.DateTimeFormat('en-ZA', {
-  weekday: 'long',
-  day: 'numeric',
-  month: 'long',
-  hour: '2-digit',
-  minute: '2-digit',
-  hour12: false,
-  timeZone: 'Africa/Johannesburg',
-})
-
 const feastFormat = new Intl.DateTimeFormat('en-GB', {
   weekday: 'short',
   day: 'numeric',
@@ -34,7 +24,45 @@ export const formatFeastDate = (value?: string | null) =>
 
 export const formatDate = (value?: string | null) => (value ? dateFormat.format(new Date(value)) : '')
 
-export const formatEventDate = (value?: string | null) => (value ? eventFormat.format(new Date(value)) : '')
+type DateParts = Record<'weekday' | 'day' | 'month' | 'year' | 'hour' | 'minute', string> & { time: string }
+
+const capeTown = (value: string): DateParts => {
+  const parts: Record<string, string> = Object.fromEntries(
+    new Intl.DateTimeFormat('en-ZA', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hourCycle: 'h23',
+      timeZone: 'Africa/Johannesburg',
+    })
+      .formatToParts(new Date(value))
+      .map((p) => [p.type, p.value]),
+  )
+  return { ...(parts as Omit<DateParts, 'time'>), time: `${parts.hour}:${parts.minute}` }
+}
+
+/**
+ * "Saturday 5 December", "Sunday 8 November, 09:00" or "Monday 14 – Saturday 19 December".
+ * A start at midnight means the event has no set time. The year shows when it is not this year.
+ */
+export const formatEventWhen = (startsAt?: string | null, endsAt?: string | null) => {
+  if (!startsAt) return ''
+  const start = capeTown(startsAt)
+  const end = endsAt ? capeTown(endsAt) : null
+  const thisYear = capeTown(new Date().toISOString()).year
+  const year = (d: DateParts) => (d.year !== thisYear ? ` ${d.year}` : '')
+  const allDay = start.time === '00:00'
+  const sameDay = !end || (end.day === start.day && end.month === start.month && end.year === start.year)
+  if (sameDay) return `${start.weekday} ${start.day} ${start.month}${year(start)}${allDay ? '' : `, ${start.time}`}`
+  const startPart =
+    start.month === end!.month && start.year === end!.year
+      ? `${start.weekday} ${start.day}`
+      : `${start.weekday} ${start.day} ${start.month}${start.year !== end!.year ? ` ${start.year}` : ''}`
+  return `${startPart} – ${end!.weekday} ${end!.day} ${end!.month}${year(end!)}`
+}
 
 export const CATEGORY_LABELS: Record<string, string> = {
   announcement: 'Announcement',

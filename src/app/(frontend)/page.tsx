@@ -5,7 +5,7 @@ import { ContactForm, EmailSignupForm } from '@/components/site/Forms'
 import { MediaImage } from '@/components/site/MediaImage'
 import { Divider, Hearts, RoseWindow } from '@/components/site/Ornament'
 import { YouTubeEmbed } from '@/components/site/YouTubeEmbed'
-import { CATEGORY_LABELS, formatDate, formatEventDate, formatFeastDate, telHref, toRoman } from '@/lib/format'
+import { CATEGORY_LABELS, formatDate, formatEventWhen, formatFeastDate, telHref, toRoman } from '@/lib/format'
 import { getHomePage, getMassSchedule, getNextEvent, getPosts, getSiteSettings, getUpcomingFeasts } from '@/lib/queries'
 import { getServerSideURL } from '@/lib/url'
 
@@ -364,7 +364,7 @@ export default async function HomePage() {
                 <>
                   <p className="title">{nextEvent.title}</p>
                   <p className="muted" style={{ margin: '4px 0 0' }}>
-                    {formatEventDate(nextEvent.startsAt)}
+                    {formatEventWhen(nextEvent.startsAt, nextEvent.endsAt)}
                     {nextEvent.location ? ` · ${nextEvent.location}` : ''}
                   </p>
                   {nextEvent.summary && <p style={{ margin: '8px 0 0' }}>{nextEvent.summary}</p>}

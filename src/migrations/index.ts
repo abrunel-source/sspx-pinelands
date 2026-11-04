@@ -5,6 +5,8 @@ import * as migration_20261023_182725_homilies_and_auto_updates from './20261023
 import * as migration_20261024_221910_spam_protection from './20261024_221910_spam_protection';
 import * as migration_20261025_190000_christ_the_king_procession from './20261025_190000_christ_the_king_procession';
 import * as migration_20261025_210000_christ_the_king_photos from './20261025_210000_christ_the_king_photos';
+import * as migration_20261104_084815_notice_until from './20261104_084815_notice_until';
+import * as migration_20261104_090000_november_notices_all_saints from './20261104_090000_november_notices_all_saints';
 
 export const migrations = [
   {
@@ -40,6 +42,16 @@ export const migrations = [
   {
     up: migration_20261025_210000_christ_the_king_photos.up,
     down: migration_20261025_210000_christ_the_king_photos.down,
-    name: '20261025_210000_christ_the_king_photos'
+    name: '20261025_210000_christ_the_king_photos',
+  },
+  {
+    up: migration_20261104_084815_notice_until.up,
+    down: migration_20261104_084815_notice_until.down,
+    name: '20261104_084815_notice_until',
+  },
+  {
+    up: migration_20261104_090000_november_notices_all_saints.up,
+    down: migration_20261104_090000_november_notices_all_saints.down,
+    name: '20261104_090000_november_notices_all_saints'
   },
 ];

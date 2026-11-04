@@ -16,8 +16,17 @@ export const NAV = [
   { href: '/#contact', label: 'Contact' },
 ]
 
+/** True until the end of the notice's last day, Cape Town time. */
+const noticeCurrent = ({ notice, noticeUntil }: MassSchedule) => {
+  if (!notice) return false
+  if (!noticeUntil) return true
+  const lastDay = new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Johannesburg' }).format(new Date(noticeUntil))
+  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Johannesburg' }).format(new Date())
+  return today <= lastDay
+}
+
 const noticeText = (schedule: MassSchedule) => {
-  if (schedule.notice) return schedule.notice
+  if (noticeCurrent(schedule)) return schedule.notice
   const mass = schedule.masses?.find((m) => m.highlight) ?? schedule.masses?.[0]
   if (!mass) return null
   const when = mass.day === 'Sunday' ? 'This Sunday' : `${mass.day}s`

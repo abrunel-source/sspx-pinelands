@@ -62,17 +62,22 @@ const uploadNode = (mediaId: number): Node => ({
 })
 
 /**
- * Replaces each "[photos N]" paragraph with its photos. A group whose photos
- * are not all in the library is left out, so a marker never reaches the page.
+ * Replaces each "[photos N]" paragraph with its photos (from `groups`, by N). A
+ * group whose photos are not all in the library is left out, so a marker never
+ * reaches the page.
  */
-export const withPhotos = (content: Content, mediaIds: Record<string, number | undefined>): Content => ({
+export const withPhotos = (
+  content: Content,
+  mediaIds: Record<string, number | undefined>,
+  groups: Record<string, readonly string[]> = PHOTO_GROUPS,
+): Content => ({
   ...content,
   root: {
     ...content.root,
     children: content.root.children.flatMap((node) => {
       const group = node.type === 'paragraph' ? textOf(node).trim().match(MARKER)?.[1] : undefined
       if (!group) return [node]
-      const ids = (PHOTO_GROUPS[group] ?? []).map((file) => mediaIds[file])
+      const ids = (groups[group] ?? []).map((file) => mediaIds[file])
       return ids.length && ids.every((id) => typeof id === 'number') ? ids.map((id) => uploadNode(id as number)) : []
     }),
   },

@@ -1130,6 +1130,10 @@ export interface MassSchedule {
    * Optional. Replaces “This Sunday: …” at the top of every page, e.g. “No Mass on Monday 2 November”. Leave empty for the usual Sunday times.
    */
   notice?: string | null;
+  /**
+   * Optional. After this day the usual Sunday times come back on their own. Leave empty to show the notice until you remove it.
+   */
+  noticeUntil?: string | null;
   masses: {
     day: 'Sunday' | 'Monday' | 'Tuesday' | 'Wednesday' | 'Thursday' | 'Friday' | 'Saturday';
     time: string;
@@ -1319,6 +1323,7 @@ export interface HomePageSelect<T extends boolean = true> {
  */
 export interface MassScheduleSelect<T extends boolean = true> {
   notice?: T;
+  noticeUntil?: T;
   masses?:
     | T
     | {

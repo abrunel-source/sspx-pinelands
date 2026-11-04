@@ -1,5 +1,7 @@
 import type { HomePage, MassSchedule, Role } from '@/payload-types'
 
+import { FIRST_FRIDAYS_TEXT, MASS_INTRO, MASS_TIMES } from './november-2026'
+
 type Perms = NonNullable<Role['permissions']>
 
 export const PROCESSION_PHOTO_ALT =
@@ -71,18 +73,9 @@ export const roles: Omit<Role, 'id' | 'createdAt' | 'updatedAt'>[] = [
 // --- Mass schedule ---------------------------------------------------------
 
 export const massSchedule: Partial<MassSchedule> = {
-  masses: [
-    { day: 'Sunday', time: '9:00', description: 'Holy Mass', note: 'Confessions from 8:00', highlight: true },
-    { day: 'Monday', time: '8:00', description: 'Holy Mass' },
-    { day: 'Friday', time: '18:30', description: 'Holy Mass' },
-    { day: 'Saturday', time: '9:00', description: 'Holy Mass' },
-  ],
-  intro:
-    'All Masses are offered according to the 1962 Roman Missal. Confessions are heard before Sunday Mass, and by appointment with the priest.',
-  specialNote: {
-    title: 'First Fridays & First Saturdays:',
-    text: 'Rosary and Benediction 30 minutes before the usual Mass time.',
-  },
+  masses: MASS_TIMES,
+  intro: MASS_INTRO,
+  specialNote: { title: 'First Fridays & First Saturdays:', text: FIRST_FRIDAYS_TEXT },
 }
 
 // --- Home page -------------------------------------------------------------
