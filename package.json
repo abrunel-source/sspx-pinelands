@@ -19,7 +19,7 @@
     "sync": "cross-env NODE_OPTIONS=--no-deprecation payload run src/scripts/sync.ts"
   },
   "engines": {
-    "node": ">=20.9.0"
+    "node": ">=20.9.0 <25"
   },
   "dependencies": {
     "@payloadcms/db-postgres": "3.90.2",
