@@ -13,7 +13,7 @@ const POSTER = 'christmas-market-2026.jpg'
 const STARTS = '2026-12-05T07:30:00.000Z'
 const ENDS = '2026-12-05T15:00:00.000Z'
 const HELP =
-  'Donations and volunteers for setting up and taking down are still needed: please speak to Chantal or Nirrie after Mass.'
+  'Donations and volunteers are still needed, for the day itself and for setting up and taking down: please speak to Chantal or Nirrie after Mass.'
 
 export async function up({ payload, req }: MigrateUpArgs): Promise<void> {
   const [existing] = (
