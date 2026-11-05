@@ -60,7 +60,7 @@ export const AnnouncementBanner: GlobalConfig = {
       ],
     },
     { name: 'place', type: 'text' },
-    { name: 'text', type: 'textarea' },
+    { name: 'text', type: 'textarea', admin: { description: 'Each line is shown as its own paragraph.' } },
     {
       name: 'poster',
       type: 'upload',

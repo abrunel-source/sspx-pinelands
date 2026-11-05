@@ -1188,6 +1188,9 @@ export interface AnnouncementBanner {
   startsAt?: string | null;
   endsAt?: string | null;
   place?: string | null;
+  /**
+   * Each line is shown as its own paragraph.
+   */
   text?: string | null;
   /**
    * Optional. Shown beside the text on the home page.

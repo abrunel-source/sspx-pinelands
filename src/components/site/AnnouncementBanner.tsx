@@ -41,7 +41,16 @@ export const AnnouncementBanner = ({ banner }: { banner: Banner }) => {
           <Divider light />
           {when && <p className="event-banner-when">{when}</p>}
           {banner.place && <p className="event-banner-place">{banner.place}</p>}
-          {banner.text && <p className="event-banner-text">{banner.text}</p>}
+          {/* Each line of the text is its own paragraph. */}
+          {banner.text
+            ?.split(/\n+/)
+            .map((line) => line.trim())
+            .filter(Boolean)
+            .map((line, i) => (
+              <p key={i} className="event-banner-text">
+                {line}
+              </p>
+            ))}
           {(banner.buttonLabel || banner.secondButtonLabel) && (
             <div className="event-banner-actions">
               {banner.buttonLabel && banner.buttonLink && (

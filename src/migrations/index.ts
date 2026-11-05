@@ -10,6 +10,7 @@ import * as migration_20261104_090000_november_notices_all_saints from './202611
 import * as migration_20261105_191143_announcement_banner from './20261105_191143_announcement_banner';
 import * as migration_20261105_192000_christmas_market_banner from './20261105_192000_christmas_market_banner';
 import * as migration_20261105_193000_notices_6_16_november from './20261105_193000_notices_6_16_november';
+import * as migration_20261105_200000_christmas_market_copy from './20261105_200000_christmas_market_copy';
 
 export const migrations = [
   {
@@ -70,6 +71,11 @@ export const migrations = [
   {
     up: migration_20261105_193000_notices_6_16_november.up,
     down: migration_20261105_193000_notices_6_16_november.down,
-    name: '20261105_193000_notices_6_16_november'
+    name: '20261105_193000_notices_6_16_november',
+  },
+  {
+    up: migration_20261105_200000_christmas_market_copy.up,
+    down: migration_20261105_200000_christmas_market_copy.down,
+    name: '20261105_200000_christmas_market_copy'
   },
 ];
