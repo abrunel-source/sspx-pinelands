@@ -7,6 +7,8 @@ import * as migration_20261025_190000_christ_the_king_procession from './2026102
 import * as migration_20261025_210000_christ_the_king_photos from './20261025_210000_christ_the_king_photos';
 import * as migration_20261104_084815_notice_until from './20261104_084815_notice_until';
 import * as migration_20261104_090000_november_notices_all_saints from './20261104_090000_november_notices_all_saints';
+import * as migration_20261105_191143_announcement_banner from './20261105_191143_announcement_banner';
+import * as migration_20261105_192000_christmas_market_banner from './20261105_192000_christmas_market_banner';
 
 export const migrations = [
   {
@@ -52,6 +54,16 @@ export const migrations = [
   {
     up: migration_20261104_090000_november_notices_all_saints.up,
     down: migration_20261104_090000_november_notices_all_saints.down,
-    name: '20261104_090000_november_notices_all_saints'
+    name: '20261104_090000_november_notices_all_saints',
+  },
+  {
+    up: migration_20261105_191143_announcement_banner.up,
+    down: migration_20261105_191143_announcement_banner.down,
+    name: '20261105_191143_announcement_banner',
+  },
+  {
+    up: migration_20261105_192000_christmas_market_banner.up,
+    down: migration_20261105_192000_christmas_market_banner.down,
+    name: '20261105_192000_christmas_market_banner'
   },
 ];

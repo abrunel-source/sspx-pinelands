@@ -102,11 +102,13 @@ export interface Config {
   globals: {
     'home-page': HomePage;
     'mass-schedule': MassSchedule;
+    'announcement-banner': AnnouncementBanner;
     'site-settings': SiteSetting;
   };
   globalsSelect: {
     'home-page': HomePageSelect<false> | HomePageSelect<true>;
     'mass-schedule': MassScheduleSelect<false> | MassScheduleSelect<true>;
+    'announcement-banner': AnnouncementBannerSelect<false> | AnnouncementBannerSelect<true>;
     'site-settings': SiteSettingsSelect<false> | SiteSettingsSelect<true>;
   };
   locale: null;
@@ -391,6 +393,13 @@ export interface Role {
       read?: boolean | null;
       update?: boolean | null;
       publish?: boolean | null;
+    };
+    /**
+     * The banner for a coming event on the home page and under the menu.
+     */
+    announcementBanner?: {
+      read?: boolean | null;
+      update?: boolean | null;
     };
     /**
      * Contact details, address, map and the email address forms are sent to.
@@ -905,6 +914,12 @@ export interface RolesSelect<T extends boolean = true> {
               update?: T;
               publish?: T;
             };
+        announcementBanner?:
+          | T
+          | {
+              read?: T;
+              update?: T;
+            };
         siteSettings?:
           | T
           | {
@@ -1155,6 +1170,37 @@ export interface MassSchedule {
   createdAt?: string | null;
 }
 /**
+ * A banner for a coming event: shown large under the welcome section of the home page, and as a slim strip under the menu on every other page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "announcement-banner".
+ */
+export interface AnnouncementBanner {
+  id: number;
+  enabled?: boolean | null;
+  /**
+   * From the next day the banner is hidden, and the daily job switches it off.
+   */
+  hideAfter?: string | null;
+  theme?: ('christmas' | 'plain') | null;
+  eyebrow?: string | null;
+  heading: string;
+  startsAt?: string | null;
+  endsAt?: string | null;
+  place?: string | null;
+  text?: string | null;
+  /**
+   * Optional. Shown beside the text on the home page.
+   */
+  poster?: (number | null) | Media;
+  buttonLabel?: string | null;
+  buttonLink?: string | null;
+  secondButtonLabel?: string | null;
+  secondButtonLink?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
  * Contact details and links used in the header, footer and contact section.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1342,6 +1388,29 @@ export interface MassScheduleSelect<T extends boolean = true> {
         text?: T;
       };
   _status?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "announcement-banner_select".
+ */
+export interface AnnouncementBannerSelect<T extends boolean = true> {
+  enabled?: T;
+  hideAfter?: T;
+  theme?: T;
+  eyebrow?: T;
+  heading?: T;
+  startsAt?: T;
+  endsAt?: T;
+  place?: T;
+  text?: T;
+  poster?: T;
+  buttonLabel?: T;
+  buttonLink?: T;
+  secondButtonLabel?: T;
+  secondButtonLink?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

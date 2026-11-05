@@ -1,39 +1,46 @@
 import type { Metadata, Viewport } from 'next'
-import { Cinzel, Cormorant_Garamond, EB_Garamond } from 'next/font/google'
+import localFont from 'next/font/local'
 import { draftMode } from 'next/headers'
 
+import { AnnouncementRibbon } from '@/components/site/AnnouncementBanner'
 import { Footer } from '@/components/site/Footer'
 import { Header } from '@/components/site/Header'
+import { HideOnHome } from '@/components/site/HideOnHome'
 import { LivePreviewListener } from '@/components/site/LivePreviewListener'
 import { PreviewBanner } from '@/components/site/PreviewBanner'
-import { getMassSchedule, getSiteSettings } from '@/lib/queries'
+import { getAnnouncementBanner, getMassSchedule, getSiteSettings } from '@/lib/queries'
 import { getServerSideURL } from '@/lib/url'
 
 import '@/styles/global.css'
 
 // Cinzel: inscriptional capitals for labels and buttons. Cormorant Garamond:
-// headings. EB Garamond: body text.
-const caps = Cinzel({
-  subsets: ['latin'],
-  weight: ['500', '600'],
+// headings. EB Garamond: body text. Served from src/fonts (SIL Open Font
+// License) rather than fetched from Google Fonts at build time, which can fail.
+const caps = localFont({
+  src: [{ path: '../../fonts/cinzel.woff2', weight: '500 600', style: 'normal' }],
   variable: '--font-caps',
   display: 'swap',
+  adjustFontFallback: 'Times New Roman',
 })
 
-const serif = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['500', '600'],
-  style: ['normal', 'italic'],
+const serif = localFont({
+  src: [
+    { path: '../../fonts/cormorant-garamond.woff2', weight: '500 600', style: 'normal' },
+    { path: '../../fonts/cormorant-garamond-italic.woff2', weight: '500 600', style: 'italic' },
+  ],
   variable: '--font-serif',
   display: 'swap',
+  adjustFontFallback: 'Times New Roman',
 })
 
-const body = EB_Garamond({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  style: ['normal', 'italic'],
+const body = localFont({
+  src: [
+    { path: '../../fonts/eb-garamond.woff2', weight: '400 600', style: 'normal' },
+    { path: '../../fonts/eb-garamond-italic.woff2', weight: '400 600', style: 'italic' },
+  ],
   variable: '--font-body',
   display: 'swap',
+  adjustFontFallback: 'Times New Roman',
 })
 
 export const metadata: Metadata = {
@@ -53,10 +60,11 @@ export const metadata: Metadata = {
 export const viewport: Viewport = { themeColor: '#16213A' }
 
 export default async function FrontendLayout({ children }: { children: React.ReactNode }) {
-  const [{ isEnabled: preview }, settings, schedule] = await Promise.all([
+  const [{ isEnabled: preview }, settings, schedule, banner] = await Promise.all([
     draftMode(),
     getSiteSettings(),
     getMassSchedule(),
+    getAnnouncementBanner(),
   ])
 
   return (
@@ -78,6 +86,9 @@ export default async function FrontendLayout({ children }: { children: React.Rea
           </>
         )}
         <Header settings={settings} schedule={schedule} />
+        <HideOnHome>
+          <AnnouncementRibbon banner={banner} />
+        </HideOnHome>
         <main id="main">{children}</main>
         <Footer settings={settings} schedule={schedule} />
       </body>

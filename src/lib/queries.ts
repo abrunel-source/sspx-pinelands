@@ -1,7 +1,7 @@
 import { draftMode } from 'next/headers'
 import { cache } from 'react'
 
-import type { Event, Feast, HomePage, MassSchedule, Post, SiteSetting } from '@/payload-types'
+import type { AnnouncementBanner, Event, Feast, HomePage, MassSchedule, Post, SiteSetting } from '@/payload-types'
 
 import { getPayloadClient } from './payload'
 
@@ -23,6 +23,11 @@ export const getMassSchedule = cache(async (): Promise<MassSchedule> => {
 export const getHomePage = cache(async (): Promise<HomePage> => {
   const payload = await getPayloadClient()
   return payload.findGlobal({ slug: 'home-page', depth: 1, draft: await isDraft() })
+})
+
+export const getAnnouncementBanner = cache(async (): Promise<AnnouncementBanner> => {
+  const payload = await getPayloadClient()
+  return payload.findGlobal({ slug: 'announcement-banner', depth: 1 })
 })
 
 export const getNextEvent = cache(async (): Promise<Event | null> => {

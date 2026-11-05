@@ -69,6 +69,13 @@ export const RESOURCES = [
     actions: ['read', 'update', 'publish'],
   },
   {
+    slug: 'announcement-banner',
+    label: 'Announcement banner',
+    kind: 'global',
+    description: 'The banner for a coming event on the home page and under the menu.',
+    actions: ['read', 'update'],
+  },
+  {
     slug: 'site-settings',
     label: 'Site settings',
     kind: 'global',

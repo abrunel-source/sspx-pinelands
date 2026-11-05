@@ -1,12 +1,21 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
+import { AnnouncementBanner } from '@/components/site/AnnouncementBanner'
 import { ContactForm, EmailSignupForm } from '@/components/site/Forms'
 import { MediaImage } from '@/components/site/MediaImage'
 import { Divider, Hearts, RoseWindow } from '@/components/site/Ornament'
 import { YouTubeEmbed } from '@/components/site/YouTubeEmbed'
 import { CATEGORY_LABELS, formatDate, formatEventWhen, formatFeastDate, telHref, toRoman } from '@/lib/format'
-import { getHomePage, getMassSchedule, getNextEvent, getPosts, getSiteSettings, getUpcomingFeasts } from '@/lib/queries'
+import {
+  getAnnouncementBanner,
+  getHomePage,
+  getMassSchedule,
+  getNextEvent,
+  getPosts,
+  getSiteSettings,
+  getUpcomingFeasts,
+} from '@/lib/queries'
 import { getServerSideURL } from '@/lib/url'
 
 export const revalidate = 3600
@@ -41,13 +50,14 @@ const YouTubeIcon = () => (
 )
 
 export default async function HomePage() {
-  const [home, schedule, settings, nextEvent, posts, feasts] = await Promise.all([
+  const [home, schedule, settings, nextEvent, posts, feasts, banner] = await Promise.all([
     getHomePage(),
     getMassSchedule(),
     getSiteSettings(),
     getNextEvent(),
     getPosts({ limit: 2 }),
     getUpcomingFeasts(4),
+    getAnnouncementBanner(),
   ])
 
   const { hero, visit, listen, community, school, news, give, contact } = home
@@ -122,6 +132,9 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* Coming event */}
+      <AnnouncementBanner banner={banner} />
 
       {/* Liturgical calendar */}
       {feasts.length > 0 && (

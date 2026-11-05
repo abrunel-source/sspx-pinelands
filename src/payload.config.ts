@@ -16,6 +16,7 @@ import { Media } from './collections/Media'
 import { Posts } from './collections/Posts'
 import { Roles } from './collections/Roles'
 import { Users } from './collections/Users'
+import { AnnouncementBanner } from './globals/AnnouncementBanner'
 import { HomePage } from './globals/HomePage'
 import { MassSchedule } from './globals/MassSchedule'
 import { SiteSettings } from './globals/SiteSettings'
@@ -54,7 +55,7 @@ export default buildConfig({
     },
   },
   collections: [Posts, Events, Feasts, Media, FormSubmissions, Users, Roles],
-  globals: [HomePage, MassSchedule, SiteSettings],
+  globals: [HomePage, MassSchedule, AnnouncementBanner, SiteSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: { outputFile: path.resolve(dirname, 'payload-types.ts') },

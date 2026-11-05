@@ -4,7 +4,7 @@
   "buildCommand": "npm run ci",
   "crons": [
     {
-      "path": "/cron/youtube",
+      "path": "/cron/daily",
       "schedule": "0 5 * * *"
     },
     {
