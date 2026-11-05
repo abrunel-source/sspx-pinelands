@@ -23,6 +23,7 @@ import { JSDOM } from 'jsdom'
 import { getPayload } from 'payload'
 
 import {
+  PARISH_FETE_PHOTO,
   PROCESSION_FOCAL_POINT,
   PROCESSION_PHOTO_ALT,
   SCHOOL_PHOTO_ALT,
@@ -47,6 +48,7 @@ const MEDIA: { file: string; alt: string; caption?: string; focalX?: number; foc
   { file: 'park-morning.jpg', alt: 'Morning light through the trees in the park across from the chapel' },
   { file: 'community-all-saints.jpg', alt: 'Children dressed as their patron saints with the priest' },
   { file: 'community-fete.jpg', alt: 'Parish fête stalls on the chapel lawn' },
+  { file: PARISH_FETE_PHOTO.file, alt: PARISH_FETE_PHOTO.alt, focalX: PARISH_FETE_PHOTO.focalX, focalY: PARISH_FETE_PHOTO.focalY },
   { file: 'community-cook-off.jpg', alt: 'Parishioners cooking together in the hall under flags of many nations' },
   { file: 'community-advent.jpg', alt: 'Decorating the Christmas tree in the hall' },
   { file: 'school.jpg', alt: 'Pupils in red blazers with their priest and teachers on the chapel steps' },

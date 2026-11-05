@@ -12,6 +12,15 @@ export const PROCESSION_FOCAL_POINT = { focalX: 57, focalY: 30 }
 
 export const PROCESSION_GALLERY_ITEM = { title: 'Christ the King', caption: 'The Blessed Sacrament carried around the park' }
 
+export const PARISH_FETE_PHOTO = {
+  file: 'parish-fete-2026.jpg',
+  alt: 'Parishioners browsing tables of clothes, crockery and bric-a-brac at the parish fête outside the chapel',
+  caption: 'Stalls outside the chapel',
+  // Keeps the stalls and the lady in the straw hat in the tall gallery frame.
+  focalX: 45,
+  focalY: 50,
+}
+
 export const SCHOOL_PHOTO_ALT =
   'Homeschool pupils in red blazers with their priest, holding their 2024 virtue distinction certificates'
 
@@ -137,7 +146,7 @@ export const home = (media: Record<string, number>): Partial<HomePage> => ({
     gallery: [
       { image: media['christ-the-king-procession.jpg'], ...PROCESSION_GALLERY_ITEM },
       { image: media['community-all-saints.jpg'], title: 'All Saints', caption: 'The children as their patron saints' },
-      { image: media['community-fete.jpg'], title: 'Parish fête', caption: 'Stalls on the chapel lawn' },
+      { image: media[PARISH_FETE_PHOTO.file], title: 'Parish fête', caption: PARISH_FETE_PHOTO.caption },
       { image: media['community-cook-off.jpg'], title: 'Cook-off', caption: 'Food from many nations' },
       { image: media['community-advent.jpg'], title: 'Advent', caption: 'Preparing the hall for Christmas' },
     ],
