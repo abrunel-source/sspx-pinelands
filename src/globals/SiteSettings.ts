@@ -22,7 +22,7 @@ export const SiteSettings: GlobalConfig = {
             {
               type: 'row',
               fields: [
-                { name: 'phone', type: 'text', required: true, defaultValue: '021 531 0694', admin: { width: '50%' } },
+                { name: 'phone', type: 'text', required: true, defaultValue: '+27 11 763 1050', admin: { width: '50%' } },
                 {
                   name: 'email',
                   label: 'Public email',
