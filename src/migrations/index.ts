@@ -15,6 +15,7 @@ import * as migration_20261105_210000_parish_fete_photo from './20261105_210000_
 import * as migration_20261106_080935_phone_default from './20261106_080935_phone_default';
 import * as migration_20261113_090000_notices_13_23_november from './20261113_090000_notices_13_23_november';
 import * as migration_20261119_090000_notices_retreat from './20261119_090000_notices_retreat';
+import * as migration_20261128_150000_notices_4_9_december from './20261128_150000_notices_4_9_december';
 
 export const migrations = [
   {
@@ -100,6 +101,11 @@ export const migrations = [
   {
     up: migration_20261119_090000_notices_retreat.up,
     down: migration_20261119_090000_notices_retreat.down,
-    name: '20261119_090000_notices_retreat'
+    name: '20261119_090000_notices_retreat',
+  },
+  {
+    up: migration_20261128_150000_notices_4_9_december.up,
+    down: migration_20261128_150000_notices_4_9_december.down,
+    name: '20261128_150000_notices_4_9_december'
   },
 ];
